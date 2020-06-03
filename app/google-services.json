@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "819739870771",
+    "firebase_url": "https://braillo-9fc0e.firebaseio.com",
+    "project_id": "braillo-9fc0e",
+    "storage_bucket": "braillo-9fc0e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819739870771:android:f225ae4434771468768546",
+        "android_client_info": {
+          "package_name": "com.example.braillo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "819739870771-1pvv2fhgs4r28gho49i2q0fefboghstf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVia8l80uqhR6Hcjs8x2LrH1_IoEr-uPQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "819739870771-1pvv2fhgs4r28gho49i2q0fefboghstf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
