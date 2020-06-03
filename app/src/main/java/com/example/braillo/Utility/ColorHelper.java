@@ -230,13 +230,14 @@ public class ColorHelper {
 
 
         if (bitmap != null && !bitmap.isRecycled()) {
+            Bitmap b= bitmap;
             Palette.from(bitmap).generate(paletteListener);
         }
 
     }
 
     public String[] getColorName(int red, int green, int blue) { //To find the closest color name
-        int r, g, b, max = 255, min = 0;
+        int r, g, b, max = 66000, min = 0;
         String[] name = null;
         for (String[] color : colorList) {
             r = Integer.parseInt(color[1]);
