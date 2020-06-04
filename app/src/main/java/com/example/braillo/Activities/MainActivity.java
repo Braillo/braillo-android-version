@@ -3,6 +3,7 @@ package com.example.braillo.Activities;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -16,13 +17,14 @@ import com.example.braillo.Utility.Gestures;
 import com.example.braillo.Utility.Helper.IntroductionMessageHelper;
 import com.example.braillo.Utility.Helper.TabsSwipeHelper;
 import com.example.braillo.Utility.UI_Connection;
-import com.example.braillo.Utility.Voice;
 import com.github.pwittchen.swipe.library.rx2.Swipe;
 import com.pedromassango.doubleclick.DoubleClick;
 import com.pedromassango.doubleclick.DoubleClickListener;
 
 import androidx.appcompat.app.AppCompatActivity;
 import io.fotoapparat.view.CameraView;
+import io.fotoapparat.view.FocusView;
+
 /*
 * TODO :
 
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     //layout
     LinearLayout linearLayout;
+    private FocusView focusView;
     private boolean hasCameraPermission = false;
     private CameraView cameraView;
     private CameraConfiguration cameraConfigurations;
@@ -69,16 +72,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        cameraConfigurations = new CameraConfiguration();
+        importViews();
+        cameraConfigurations = new CameraConfiguration(cameraView , this ,focusView);
         bitmapConfiguration = new BitmapConfiguration();
         threadHelper = new ThreadHelper(this , bitmapConfiguration,cameraConfigurations ,getApplication());
         introductionMessageHelper = new IntroductionMessageHelper(this , this);
         swipeConfiguration();
         tabsSwipeHelper= new TabsSwipeHelper(gestures , threadHelper);
-        importViews();
+
 
         ActivityHelper.hideNotificationBar(this);
-        cameraConfigurations.cameraStart(this, cameraView);
+        cameraConfigurations.cameraStart(this, cameraView, focusView);
         UI_Connection.fillMap();
         introductionMessageHelper.introductionMessage(hasCameraPermission);
         mainScreen();
@@ -96,34 +100,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (hasCameraPermission) {
-            cameraConfigurations.cameraConfiguration(cameraView, this).start();
+            cameraConfigurations.startCamera();
 
         } else {
             cameraConfigurations.requestCameraPermission(this);
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (hasCameraPermission) {
-            cameraConfigurations.cameraConfiguration(cameraView, this).stop();
-        }
 
-
-        threadHelper.killAllThreadsAndReleaseVoice();
-    }
 
     @Override
     protected void onStop() {
         super.onStop();
         if (hasCameraPermission) {
-            cameraConfigurations.cameraConfiguration(cameraView, this).stop();
+
+            cameraConfigurations.KillCamera();
         }
 
+         threadHelper.killAllThreadsAndReleaseVoice();
 
-        threadHelper.killAllThreadsAndReleaseVoice();
-        finish();
     }
 
     @Override
@@ -133,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 hasCameraPermission = true;
                 introductionMessageHelper.introductionMessage(hasCameraPermission);
 
-                cameraConfigurations.cameraConfiguration(cameraView, this).start();
+                cameraConfigurations.cameraConfiguration(cameraView, this, focusView).start();
                 cameraView.setVisibility(View.VISIBLE);
             } else {
 
@@ -187,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
     private void importViews() {
         cameraView = findViewById(R.id.cameraView);
         linearLayout = findViewById(R.id.linearLayout);
+        focusView = findViewById(R.id.focusView);
     }
 
 
