@@ -2,6 +2,10 @@ package com.example.braillo.Activities;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -10,12 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.braillo.R;
-import com.example.braillo.Utility.Helper.ThreadHelper;
 import com.example.braillo.Utility.Configurations.BitmapConfiguration;
 import com.example.braillo.Utility.Configurations.CameraConfiguration;
 import com.example.braillo.Utility.Gestures;
 import com.example.braillo.Utility.Helper.IntroductionMessageHelper;
 import com.example.braillo.Utility.Helper.TabsSwipeHelper;
+import com.example.braillo.Utility.Helper.ThreadHelper;
 import com.example.braillo.Utility.UI_Connection;
 import com.github.pwittchen.swipe.library.rx2.Swipe;
 import com.pedromassango.doubleclick.DoubleClick;
@@ -67,19 +71,20 @@ public class MainActivity extends AppCompatActivity {
     IntroductionMessageHelper introductionMessageHelper;
 
     boolean flag = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        sensor();
         importViews();
-        cameraConfigurations = new CameraConfiguration(cameraView , this ,focusView);
+        cameraConfigurations = new CameraConfiguration(cameraView, this, focusView);
         cameraConfigurations.startCamera();
-       bitmapConfiguration = new BitmapConfiguration();
-        threadHelper = new ThreadHelper(this , bitmapConfiguration,cameraConfigurations ,getApplication());
-        introductionMessageHelper = new IntroductionMessageHelper(this , this);
+        bitmapConfiguration = new BitmapConfiguration();
+        threadHelper = new ThreadHelper(this, bitmapConfiguration, cameraConfigurations, getApplication());
+        introductionMessageHelper = new IntroductionMessageHelper(this, this);
         swipeConfiguration();
-        tabsSwipeHelper= new TabsSwipeHelper(gestures , threadHelper);
+        tabsSwipeHelper = new TabsSwipeHelper(gestures, threadHelper);
 
 
         ActivityHelper.hideNotificationBar(this);
@@ -109,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -127,13 +131,13 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == CameraCode) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 hasCameraPermission = true;
-               introductionMessageHelper.introductionMessage(hasCameraPermission);
+                introductionMessageHelper.introductionMessage(hasCameraPermission);
 
                 cameraConfigurations.startCamera();
                 cameraView.setVisibility(View.VISIBLE);
             } else {
 
-                    hasCameraPermission = false;
+                hasCameraPermission = false;
 
 
                 Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
@@ -149,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             public void onSingleClick(View view) {
 
                 if (hasCameraPermission)
-                   tabsSwipeHelper.tabs(activity);
+                    tabsSwipeHelper.tabs(activity);
             }
 
             @Override
@@ -186,6 +190,47 @@ public class MainActivity extends AppCompatActivity {
         focusView = findViewById(R.id.focusView);
     }
 
+    private void sensor() {
+        SensorManager mySensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
+        Sensor lightSensor = mySensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        if (lightSensor != null) {
+
+            mySensorManager.registerListener(
+                    lightSensorListener,
+                    lightSensor,
+                    SensorManager.SENSOR_DELAY_NORMAL);
+
+        } else {
+
+        }
+
+    }
+
+    private final SensorEventListener lightSensorListener
+            = new SensorEventListener() {
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            // TODO Auto-generated method stub
+
+
+            Log.d("onAccuracyChanged", accuracy + "---" + sensor.getType());
+
+
+        }
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
+                Log.d("onSensorChanged", event.values[0] + "");
+                if (event.values[0] >= 3.0)
+                    cameraConfigurations.toggleFlash(false);
+                else
+                    cameraConfigurations.toggleFlash(true);
+            }
+        }
+
+    };
 
 }

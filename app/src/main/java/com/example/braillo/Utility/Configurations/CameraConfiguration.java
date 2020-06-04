@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import io.fotoapparat.Fotoapparat;
+import io.fotoapparat.configuration.UpdateConfiguration;
 import io.fotoapparat.error.CameraErrorListener;
 import io.fotoapparat.exception.camera.CameraException;
 import io.fotoapparat.parameter.ScaleType;
@@ -19,7 +20,12 @@ import io.fotoapparat.selector.ResolutionSelectorsKt;
 import io.fotoapparat.view.CameraView;
 import io.fotoapparat.view.FocusView;
 
+import static io.fotoapparat.selector.FlashSelectorsKt.autoFlash;
+import static io.fotoapparat.selector.FlashSelectorsKt.autoRedEye;
+import static io.fotoapparat.selector.FlashSelectorsKt.off;
+import static io.fotoapparat.selector.FlashSelectorsKt.torch;
 import static io.fotoapparat.selector.LensPositionSelectorsKt.back;
+import static io.fotoapparat.selector.SelectorsKt.firstAvailable;
 
 public class CameraConfiguration {
 
@@ -44,7 +50,11 @@ public class CameraConfiguration {
                 .photoResolution(ResolutionSelectorsKt.highestResolution())
                 .lensPosition(back())
                 //.focusView(focusView)
-                .flash(FlashSelectorsKt.autoFlash())
+                .flash(firstAvailable(
+                        autoRedEye(),
+                        autoFlash(),
+                        torch(),
+                        off()))
                 .frameProcessor(new CameraConfiguration.SampleFrameProcessor())
                 .cameraErrorCallback(new CameraErrorListener() {
                     @Override
@@ -66,8 +76,16 @@ public class CameraConfiguration {
                     new String[]{Manifest.permission.CAMERA}, CameraCode);
     }
 
+public void toggleFlash(boolean flag) {
 
-
+    foto.updateConfiguration(
+            UpdateConfiguration.builder()
+                    .flash(
+                         flag?  torch() : off()
+                    )
+                    .build()
+    );
+}
 
     private class SampleFrameProcessor implements FrameProcessor {
         @Override
