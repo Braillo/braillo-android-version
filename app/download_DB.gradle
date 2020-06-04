@@ -12,15 +12,15 @@ task downloadAndUnzipFile(dependsOn: downloadZipFile, type: Copy) {
 }
 
 
-task extractModels(type: Copy) {
+task extractDB(type: Copy) {
     dependsOn downloadAndUnzipFile
 }
 
 tasks.whenTaskAdded { task ->
     if (task.name == 'assembleDebug') {
-        task.dependsOn 'extractModels'
+        task.dependsOn 'extractDB'
     }
     if (task.name == 'assembleRelease') {
-        task.dependsOn 'extractModels'
+        task.dependsOn 'extractDB'
     }
 }
