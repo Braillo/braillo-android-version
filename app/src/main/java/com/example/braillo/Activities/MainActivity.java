@@ -74,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
         importViews();
         cameraConfigurations = new CameraConfiguration(cameraView , this ,focusView);
-        bitmapConfiguration = new BitmapConfiguration();
+        cameraConfigurations.startCamera();
+       bitmapConfiguration = new BitmapConfiguration();
         threadHelper = new ThreadHelper(this , bitmapConfiguration,cameraConfigurations ,getApplication());
         introductionMessageHelper = new IntroductionMessageHelper(this , this);
         swipeConfiguration();
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         ActivityHelper.hideNotificationBar(this);
-        cameraConfigurations.cameraStart(this, cameraView, focusView);
+
         UI_Connection.fillMap();
         introductionMessageHelper.introductionMessage(hasCameraPermission);
         mainScreen();
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             cameraConfigurations.KillCamera();
         }
 
-         threadHelper.killAllThreadsAndReleaseVoice();
+        threadHelper.killAllThreadsAndReleaseVoice();
 
     }
 
@@ -126,9 +127,9 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == CameraCode) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 hasCameraPermission = true;
-                introductionMessageHelper.introductionMessage(hasCameraPermission);
+               introductionMessageHelper.introductionMessage(hasCameraPermission);
 
-                cameraConfigurations.cameraConfiguration(cameraView, this, focusView).start();
+                cameraConfigurations.startCamera();
                 cameraView.setVisibility(View.VISIBLE);
             } else {
 

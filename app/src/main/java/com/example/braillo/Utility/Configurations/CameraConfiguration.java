@@ -35,7 +35,7 @@ public class CameraConfiguration {
         foto = cameraConfiguration(cameraView,activity,focusView);
     }
 
-    public Fotoapparat cameraConfiguration(CameraView cameraView, final Context activity, FocusView focusView) {
+  private Fotoapparat cameraConfiguration(CameraView cameraView, final Context activity, FocusView focusView) {
         return Fotoapparat
                 .with(activity)
                 .into(cameraView)
@@ -44,7 +44,7 @@ public class CameraConfiguration {
                 .photoResolution(ResolutionSelectorsKt.highestResolution())
                 .lensPosition(back())
                 //.focusView(focusView)
-                .flash(FlashSelectorsKt.torch())
+                .flash(FlashSelectorsKt.autoFlash())
                 .frameProcessor(new CameraConfiguration.SampleFrameProcessor())
                 .cameraErrorCallback(new CameraErrorListener() {
                     @Override
@@ -66,10 +66,7 @@ public class CameraConfiguration {
                     new String[]{Manifest.permission.CAMERA}, CameraCode);
     }
 
-    public Fotoapparat cameraStart(Context context, CameraView cameraView, FocusView focusView) {
 
-        return cameraConfiguration(cameraView , context,focusView );
-    }
 
 
     private class SampleFrameProcessor implements FrameProcessor {
