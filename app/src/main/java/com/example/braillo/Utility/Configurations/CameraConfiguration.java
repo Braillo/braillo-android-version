@@ -35,7 +35,6 @@ public class CameraConfiguration {
 
     private final int CameraCode = 1;
     private Frame  frame;
-
     public Frame getFrame() {
 
         return frame;
@@ -51,7 +50,7 @@ public class CameraConfiguration {
                 .photoResolution(ResolutionSelectorsKt.highestResolution())
                 .lensPosition(LensPositionSelectorsKt.back())
 
-                .flash(FlashSelectorsKt.off())
+                .flash(FlashSelectorsKt.torch())
                 .frameProcessor(new CameraConfiguration.SampleFrameProcessor())
                 .cameraErrorCallback(new CameraErrorListener() {
                     @Override

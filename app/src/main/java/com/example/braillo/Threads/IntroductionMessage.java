@@ -14,7 +14,7 @@ public class IntroductionMessage extends Thread {
         try {
             MediaPlayer mediaPlayer = new MediaPlayer();
 
-            AssetFileDescriptor descriptor = context.getAssets().openFd("AppCommand/welcomMessage.mp3");
+            AssetFileDescriptor descriptor = context.getAssets().openFd("AppCommand/welcomeMessage.mp3");
             mediaPlayer.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
 
             descriptor.close();

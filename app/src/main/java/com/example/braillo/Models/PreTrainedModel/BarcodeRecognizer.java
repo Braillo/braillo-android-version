@@ -55,8 +55,9 @@ public class BarcodeRecognizer {
                             Point[] corners = barcode.getCornerPoints();
 
                             BarcodeRepository barcodeRepository = new BarcodeRepository(application );
-                            Toast.makeText(activity, barcode.getRawValue(), Toast.LENGTH_SHORT).show();
-                            try {
+                            Log.d("barcode " , barcode.getRawValue());
+                          //  Toast.makeText(activity, barcode.getRawValue(), Toast.LENGTH_SHORT).show();
+                          /*  try {
                                 if(barcodeRepository.getNameCode(barcode.getRawValue())!=null &&
                                         barcodeRepository.getNameCode(barcode.getRawValue()).size()!=0) {
                                      Log.d("barcode", barcodeRepository.getNameCode(barcode.getRawValue()).get(0).getBarcodeName());
@@ -69,7 +70,7 @@ public class BarcodeRecognizer {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            int valueType = barcode.getValueType();
+                            int valueType = barcode.getValueType();*/
 
                         }
                     }

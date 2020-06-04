@@ -30,15 +30,13 @@ import io.fotoapparat.view.CameraView;
 
 food detection -->
 open with Google assistance
-introduction message
-orientation --> ml kit
+introduction message  finished
+orientation --> ml kit simi finished
 
 refactoring
-hide notification bar --> activity helper class
+hide notification bar --> activity helper class finished
 
-building camera API
 
-frame processor static class
 
 future work -->
 age and gender detection
@@ -105,17 +103,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
-    protected void onStop() {
-
+    protected void onPause() {
+        super.onPause();
         if (hasCameraPermission) {
             cameraConfigurations.cameraConfiguration(cameraView, this).stop();
         }
-        Voice.release();
 
 
+        threadHelper.killAllThreadsAndReleaseVoice();
+    }
+
+    @Override
+    protected void onStop() {
         super.onStop();
+        if (hasCameraPermission) {
+            cameraConfigurations.cameraConfiguration(cameraView, this).stop();
+        }
+
+
+        threadHelper.killAllThreadsAndReleaseVoice();
+        finish();
     }
 
     @Override
