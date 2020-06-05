@@ -23,7 +23,7 @@ public class ThreadHelper {
     BitmapConfiguration bitmapConfiguration;
     CameraConfiguration cameraConfigurations;
 
-    public ThreadHelper(Activity activity, BitmapConfiguration bitmapConfiguration, CameraConfiguration cameraConfigurations ,Application application) {
+    public ThreadHelper(Activity activity, BitmapConfiguration bitmapConfiguration, CameraConfiguration cameraConfigurations, Application application) {
         this.activity = activity;
         this.bitmapConfiguration = bitmapConfiguration;
         this.cameraConfigurations = cameraConfigurations;
@@ -47,7 +47,7 @@ public class ThreadHelper {
     public void barcodeThread() {
         killAllThreadsAndReleaseVoice();
 
-        barcodeThread = new Barcode(activity, bitmapConfiguration.getBitmap(cameraConfigurations.getFrame()),application);
+        barcodeThread = new Barcode(activity, bitmapConfiguration.getBitmap(cameraConfigurations.getFrame()), application);
         barcodeThread.start();
     }
 

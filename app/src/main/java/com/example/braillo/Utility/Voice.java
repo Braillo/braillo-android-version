@@ -70,7 +70,7 @@ public class Voice {
             playAssetSound(activity, s);
             Log.i("speak debug", "speak: in currency & detection");
         } else {
-            Log.i("speak debug", "speak: in ocr :: "+s);
+            Log.i("speak debug", "speak: in ocr :: " + s);
             release();
             mTTS = new TextToSpeech(activity, new TextToSpeech.OnInitListener() {
                 @Override

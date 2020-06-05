@@ -1,6 +1,5 @@
 package com.example.braillo.Utility;
 
-import android.content.Context;
 import android.view.MotionEvent;
 
 import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
@@ -20,7 +19,7 @@ public class Gestures extends SimpleSwipeListener {
 
     @Override
     public boolean onSwipedRight(MotionEvent event) {
-        swipeStep = ((swipeStep - 1) % 5 + 5 ) % 5; // to handel Negative value
+        swipeStep = ((swipeStep - 1) % 5 + 5) % 5; // to handel Negative value
         return false;
     }
 

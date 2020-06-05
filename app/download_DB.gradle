@@ -1,4 +1,3 @@
-
 task downloadZipFile(type: Download) {
     src 'https://ia801507.us.archive.org/24/items/barcodes_202006/barcodes.zip'
     dest new File(buildDir, 'zips/')

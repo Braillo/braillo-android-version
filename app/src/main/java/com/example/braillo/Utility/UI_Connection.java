@@ -5,26 +5,32 @@ import android.app.Application;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.example.braillo.Models.Models;
-import com.example.braillo.Models.Recognition;
-import com.example.braillo.Models.PreTrainedModel.BarcodeRecognizer;
 import com.example.braillo.Models.Helper.CurrencyModelClassifier;
 import com.example.braillo.Models.Helper.DetectionModelClassifier;
+import com.example.braillo.Models.Models;
+import com.example.braillo.Models.PreTrainedModel.BarcodeRecognizer;
 import com.example.braillo.Models.PreTrainedModel.OCRRecognizer;
+import com.example.braillo.Models.Recognition;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class UI_Connection {
-
+    private static DetectionModelClassifier classifier;
+    private static List<Recognition> list;
+    private static BarcodeRecognizer barcodeRecognizer;
+    private static OCRRecognizer ocrRecognizer;
+    private static ColorHelper color;
+    private static HashMap<Integer, String[]> map;
+    private static String[] Label;
+    private static String[] conf;
     private static HashMap<String, String> hashMap = new HashMap<String, String>();
 
     public static List<Recognition> detection(Bitmap bitmap, Activity activity) {
-        DetectionModelClassifier classifier = new DetectionModelClassifier(activity,
+        classifier = new DetectionModelClassifier(activity,
                 bitmap, Models.DETECTIONMODEL, Models.DETECTIONLABEL, true);
         classifier.classifer();
-        List<Recognition> list = classifier.getAllOutPut();
-
+        list = classifier.getAllOutPut();
 
         return list;
     }
@@ -34,9 +40,9 @@ public class UI_Connection {
         CurrencyModelClassifier classifier = new CurrencyModelClassifier(activity,
                 bitmap, Models.CURRENCYMODEL, Models.CURRENCYLABEL, false);
 
-        HashMap<Integer, String[]> map = classifier.classifer();
-        String[] Label = map.get(0);
-        String[] conf = map.get(1);
+        map = classifier.classifer();
+        Label = map.get(0);
+        conf = map.get(1);
         for (int i = 0; i < conf.length; i++) {
             Log.i("label", Label[i]);
 
@@ -51,21 +57,23 @@ public class UI_Connection {
         return s;
     }
 
-    public static String get_Barcode(Bitmap bitmap, final Activity activity , Application application) {
-        BarcodeRecognizer barcodeRecognizer = new BarcodeRecognizer(bitmap, activity , application);
-        barcodeRecognizer.getBarcode();
-        return null;
+    public static void get_Barcode(Bitmap bitmap, final Activity activity, Application application) {
+
+        BarcodeRecognizer.getBarcode(bitmap, activity, application);
+
 
     }
 
     public static void OCR(Bitmap bitmap, final Activity activity) {
-        OCRRecognizer ocrRecognizer = new OCRRecognizer(bitmap, activity);
-        Voice.speak(activity, ocrRecognizer.OCR(), false);
+
+        Voice.speak(activity, OCRRecognizer.OCR(bitmap, activity), false);
     }
-    public static void colorDetection(Bitmap bitmap, final Activity activity){
-        ColorHelper color = new ColorHelper(activity,bitmap);
+
+    public static void colorDetection(Bitmap bitmap, final Activity activity) {
+        color = new ColorHelper(activity, bitmap);
         color.paletteProcessing();
     }
+
     //static voice
     public static void fillMap() {
         hashMap.put("10", "CurrencyDetection/c10.mp3");

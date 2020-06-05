@@ -30,13 +30,13 @@ android {
     }
 }
 project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets/DataBase'
-project.ext.TMP_DIR   = project.buildDir.toString() + '/downloads'
+project.ext.TMP_DIR = project.buildDir.toString() + '/downloads'
 
 // Download default models; if you wish to use your own models then
 // place them in the "assets" directory and comment out this line.
 //apply from: "download_model.gradle"
 
-apply from:'download_DB.gradle'
+apply from: 'download_DB.gradle'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -65,7 +65,6 @@ dependencies {
 
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
-    
 
 
 }

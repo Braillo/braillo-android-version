@@ -7,7 +7,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -48,39 +47,42 @@ future work -->
 age and gender detection
 
 * */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private final int CameraCode = 1;
     BitmapConfiguration bitmapConfiguration;
 
     //layout
     LinearLayout linearLayout;
+    //threads
+    ThreadHelper threadHelper;
+    TabsSwipeHelper tabsSwipeHelper;
+    IntroductionMessageHelper introductionMessageHelper;
+    SensorActivity sensorActivity;
     private FocusView focusView;
     private boolean hasCameraPermission = false;
     private CameraView cameraView;
     private CameraConfiguration cameraConfigurations;
-
     //SWIP
     private Swipe swipe;
     private Gestures gestures;
-    //threads
-    ThreadHelper threadHelper;
 
-    TabsSwipeHelper tabsSwipeHelper;
-
-    IntroductionMessageHelper introductionMessageHelper;
-
-    boolean flag = false;
+    public CameraConfiguration getCameraConfigurations() {
+        return cameraConfigurations;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sensor();
+
+
         importViews();
         cameraConfigurations = new CameraConfiguration(cameraView, this, focusView);
         cameraConfigurations.startCamera();
         bitmapConfiguration = new BitmapConfiguration();
+       // sensorActivity = new SensorActivity((SensorManager) getSystemService(SENSOR_SERVICE), this);
+
         threadHelper = new ThreadHelper(this, bitmapConfiguration, cameraConfigurations, getApplication());
         introductionMessageHelper = new IntroductionMessageHelper(this, this);
         swipeConfiguration();
@@ -113,6 +115,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        /*if (sensorActivity != null)
+            sensorActivity.onResume();*/
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+      /*  if (sensorActivity != null)
+            sensorActivity.onPause();*/
+    }
 
     @Override
     protected void onStop() {
@@ -124,6 +139,12 @@ public class MainActivity extends AppCompatActivity {
 
         threadHelper.killAllThreadsAndReleaseVoice();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+       // sensorActivity.onPause();
     }
 
     @Override
@@ -190,47 +211,14 @@ public class MainActivity extends AppCompatActivity {
         focusView = findViewById(R.id.focusView);
     }
 
-    private void sensor() {
-        SensorManager mySensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-        Sensor lightSensor = mySensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        if (lightSensor != null) {
-
-            mySensorManager.registerListener(
-                    lightSensorListener,
-                    lightSensor,
-                    SensorManager.SENSOR_DELAY_NORMAL);
-
-        } else {
-
-        }
-
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+       // sensorActivity.onSensorChanged(event);
     }
 
-    private final SensorEventListener lightSensorListener
-            = new SensorEventListener() {
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-            // TODO Auto-generated method stub
-
-
-            Log.d("onAccuracyChanged", accuracy + "---" + sensor.getType());
-
-
-        }
-
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
-                Log.d("onSensorChanged", event.values[0] + "");
-                if (event.values[0] >= 3.0)
-                    cameraConfigurations.toggleFlash(false);
-                else
-                    cameraConfigurations.toggleFlash(true);
-            }
-        }
-
-    };
-
+    }
 }

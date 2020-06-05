@@ -6,17 +6,13 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "barcodes")
 public class Barcode {
-    public void setId(int id) {
-        this.id = id;
-    }
-    @ColumnInfo(name = "id")
-    @PrimaryKey(autoGenerate = true)
-    private int id ;
     @ColumnInfo(name = "ean")
     public String barcodeNumber;
     @ColumnInfo(name = "name")
-    public String barcodeName ;
-
+    public String barcodeName;
+    @ColumnInfo(name = "id")
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     public Barcode(String barcodeNumber, String barcodeName) {
         this.barcodeNumber = barcodeNumber;
         this.barcodeName = barcodeName;
@@ -24,6 +20,10 @@ public class Barcode {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getBarcodeNumber() {

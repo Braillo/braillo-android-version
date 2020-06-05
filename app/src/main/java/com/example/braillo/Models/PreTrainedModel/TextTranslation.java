@@ -12,11 +12,12 @@ import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslatorOption
 
 public class TextTranslation {
 
+    static FirebaseModelDownloadConditions conditions;
+    static FirebaseTranslatorOptions options;
 
-
-    public static void translation(final String text){
+    public static void translation(final String text) {
         // Create an English-German translator:
-        FirebaseTranslatorOptions options =
+        options =
                 new FirebaseTranslatorOptions.Builder()
                         .setSourceLanguage(FirebaseTranslateLanguage.EN)
                         .setTargetLanguage(FirebaseTranslateLanguage.AR)
@@ -25,7 +26,7 @@ public class TextTranslation {
         final FirebaseTranslator englishGermanTranslator =
                 FirebaseNaturalLanguage.getInstance().getTranslator(options);
 
-        FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions.Builder()
+        conditions = new FirebaseModelDownloadConditions.Builder()
                 .requireWifi()
                 .build();
         englishGermanTranslator.downloadModelIfNeeded(conditions)
@@ -37,8 +38,8 @@ public class TextTranslation {
                                         .addOnSuccessListener(
                                                 new OnSuccessListener<String>() {
                                                     @Override
-                                                    public void onSuccess( String translatedText) {
-                                                        Log.d("translation" , translatedText);
+                                                    public void onSuccess(String translatedText) {
+                                                        Log.d("translation", translatedText);
                                                     }
                                                 })
                                         .addOnFailureListener(
@@ -46,7 +47,7 @@ public class TextTranslation {
                                                     @Override
                                                     public void onFailure(Exception e) {
                                                         // Error.
-                                                        Log.d("translation" , "no text translated");
+                                                        Log.d("translation", "no text translated");
                                                         // ...
                                                     }
                                                 });
@@ -55,9 +56,9 @@ public class TextTranslation {
                 .addOnFailureListener(
                         new OnFailureListener() {
                             @Override
-                            public void onFailure( Exception e) {
+                            public void onFailure(Exception e) {
                                 // Model couldn’t be downloaded or other internal error.
-                                Log.d("translation" , "model not downloaded");
+                                Log.d("translation", "model not downloaded");
                                 // ...
                             }
                         });

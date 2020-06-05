@@ -9,5 +9,5 @@ import androidx.room.Query;
 public interface BarcodeDao {
 
     @Query("SELECT * FROM barcodes where ean = :barcodeNumber")
-     List<Barcode> loadFullName(String barcodeNumber);
+    List<Barcode> loadFullName(String barcodeNumber);
 }

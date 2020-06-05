@@ -14,8 +14,6 @@ import io.fotoapparat.exception.camera.CameraException;
 import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
-import io.fotoapparat.selector.FlashSelectorsKt;
-import io.fotoapparat.selector.LensPositionSelectorsKt;
 import io.fotoapparat.selector.ResolutionSelectorsKt;
 import io.fotoapparat.view.CameraView;
 import io.fotoapparat.view.FocusView;
@@ -30,18 +28,19 @@ import static io.fotoapparat.selector.SelectorsKt.firstAvailable;
 public class CameraConfiguration {
 
     private final int CameraCode = 1;
-    private Frame  frame;
+    private Frame frame;
     private Fotoapparat foto;
+
+    public CameraConfiguration(CameraView cameraView, final Context activity, FocusView focusView) {
+        foto = cameraConfiguration(cameraView, activity, focusView);
+    }
+
     public Frame getFrame() {
 
         return frame;
     }
 
-    public CameraConfiguration(CameraView cameraView, final Context activity, FocusView focusView) {
-        foto = cameraConfiguration(cameraView,activity,focusView);
-    }
-
-  private Fotoapparat cameraConfiguration(CameraView cameraView, final Context activity, FocusView focusView) {
+    private Fotoapparat cameraConfiguration(CameraView cameraView, final Context activity, FocusView focusView) {
         return Fotoapparat
                 .with(activity)
                 .into(cameraView)
@@ -65,27 +64,30 @@ public class CameraConfiguration {
                 })
                 .build();
     }
-    public void startCamera(){
+
+    public void startCamera() {
         foto.start();
     }
-    public void KillCamera(){
+
+    public void KillCamera() {
         foto.stop();
     }
+
     public void requestCameraPermission(final Activity activity) {
-            ActivityCompat.requestPermissions(activity,
-                    new String[]{Manifest.permission.CAMERA}, CameraCode);
+        ActivityCompat.requestPermissions(activity,
+                new String[]{Manifest.permission.CAMERA}, CameraCode);
     }
 
-public void toggleFlash(boolean flag) {
+    public void toggleFlash(boolean flag) {
 
-    foto.updateConfiguration(
-            UpdateConfiguration.builder()
-                    .flash(
-                         flag?  torch() : off()
-                    )
-                    .build()
-    );
-}
+        foto.updateConfiguration(
+                UpdateConfiguration.builder()
+                        .flash(
+                                flag ? torch() : off()
+                        )
+                        .build()
+        );
+    }
 
     private class SampleFrameProcessor implements FrameProcessor {
         @Override

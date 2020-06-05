@@ -10,6 +10,7 @@ import com.example.braillo.Utility.Voice;
 public class CurrencyDetection extends Thread {
     Activity activity;
     Bitmap bitmap;
+    String s;
 
     public CurrencyDetection(Activity activity, Bitmap bitmap) {
         this.activity = activity;
@@ -18,7 +19,7 @@ public class CurrencyDetection extends Thread {
 
     @Override
     public void run() {
-        String s = UI_Connection.currency(bitmap, activity);
-        Voice.speak(activity, s,true);
+        s = UI_Connection.currency(bitmap, activity);
+        Voice.speak(activity, s, true);
     }
 }

@@ -26,17 +26,35 @@ import java.util.Map;
 public class DetectionModelClassifier {
 
 
-    String modelPath, labelPath;
-    Activity activity;
-
     // Only return this many results.
     private static final int NUM_DETECTIONS = 10;
     // Float model
     private static final float IMAGE_MEAN = 128.0f;
     private static final float IMAGE_STD = 128.0f;
-
-
+    // options for model interpreter
+    private final Interpreter.Options tfliteOptions = new Interpreter.Options();
+    String modelPath, labelPath;
+    Activity activity;
     Map<Integer, Object> outputMap, outputMapq;
+    long startOffset;
+    long declaredLength;
+    AssetFileDescriptor fileDescriptor;
+    // options for model interpreter
+    FileInputStream inputStream;
+    FileChannel fileChannel;
+    BufferedReader reader;
+    String line;
+    int width;
+    int height;
+    float scaleWidth;
+    float scaleHeight;
+    Matrix matrix;
+
+
+    // selected classifier information received from extras
+    Bitmap resizedBitmap;
+    Bitmap bitmap;
+    List<Recognition> recognitions;
     // outputLocations: array of shape [Batchsize, NUM_DETECTIONS,4]
     // contains the location of detected boxes
     private float[][][] outputLocations;
@@ -49,8 +67,6 @@ public class DetectionModelClassifier {
     // numDetections: array of shape [Batchsize]
     // contains the number of detected boxes
     private float[] numDetections;
-    // options for model interpreter
-
     // outputLocations: array of shape [Batchsize, NUM_DETECTIONS,4]
     // contains the location of detected boxes
     private byte[][][] outputLocationsq;
@@ -63,8 +79,6 @@ public class DetectionModelClassifier {
     // numDetections: array of shape [Batchsize]
     // contains the number of detected boxes
     private byte[] numDetectionsq;
-    // options for model interpreter
-    private final Interpreter.Options tfliteOptions = new Interpreter.Options();
     // tflite graph
     private Interpreter tflite;
     // holds all the possible labels for model
@@ -72,21 +86,13 @@ public class DetectionModelClassifier {
     // holds the selected image data as bytes
     private ByteBuffer imgData = null;
     private Bitmap img;
-
-
-    // selected classifier information received from extras
-
     private boolean quant;
-
     // input image dimensions for the Inception Model
     private int DIM_IMG_SIZE_X = 300;
     private int DIM_IMG_SIZE_Y = 300;
     private int DIM_PIXEL_SIZE = 3;
-
     // int array to hold image data
     private int[] intValues;
-
-
     public DetectionModelClassifier(Activity activity, Bitmap bitmap, String modelpath, String LabelPath, boolean quant) {
         this.activity = activity;
         this.modelPath = modelpath;
@@ -110,11 +116,11 @@ public class DetectionModelClassifier {
 
     // loads tflite grapg from file
     private MappedByteBuffer loadModelFile() throws IOException {
-        AssetFileDescriptor fileDescriptor = activity.getAssets().openFd(modelPath);
-        FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
-        FileChannel fileChannel = inputStream.getChannel();
-        long startOffset = fileDescriptor.getStartOffset();
-        long declaredLength = fileDescriptor.getDeclaredLength();
+        fileDescriptor = activity.getAssets().openFd(modelPath);
+        inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
+        fileChannel = inputStream.getChannel();
+        startOffset = fileDescriptor.getStartOffset();
+        declaredLength = fileDescriptor.getDeclaredLength();
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
     }
 
@@ -149,10 +155,10 @@ public class DetectionModelClassifier {
 
     // loads the labels from the label txt file in assets into a string array
     private List<String> loadLabelList() throws IOException {
-        List<String> labelList = new ArrayList<String>();
-        BufferedReader reader =
+        labelList = new ArrayList<String>();
+        reader =
                 new BufferedReader(new InputStreamReader(activity.getAssets().open(labelPath)));
-        String line;
+
         while ((line = reader.readLine()) != null) {
             labelList.add(line);
         }
@@ -160,16 +166,15 @@ public class DetectionModelClassifier {
         return labelList;
     }
 
-
     // resizes bitmap to given dimensions
     public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
-        int width = bm.getWidth();
-        int height = bm.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-        Matrix matrix = new Matrix();
+        width = bm.getWidth();
+        height = bm.getHeight();
+        scaleWidth = ((float) newWidth) / width;
+        scaleHeight = ((float) newHeight) / height;
+        matrix = new Matrix();
         matrix.postScale(scaleWidth, scaleHeight);
-        Bitmap resizedBitmap = Bitmap.createBitmap(
+        resizedBitmap = Bitmap.createBitmap(
                 bm, 0, 0, width, height, matrix, false);
         return resizedBitmap;
     }
@@ -199,7 +204,7 @@ public class DetectionModelClassifier {
 
 
         // resize the bitmap to the required input size to the CNN
-        Bitmap bitmap = getResizedBitmap(img, DIM_IMG_SIZE_X, DIM_IMG_SIZE_Y);
+        bitmap = getResizedBitmap(img, DIM_IMG_SIZE_X, DIM_IMG_SIZE_Y);
         // convert bitmap to byte array
         convertBitmapToByteBuffer(bitmap);
 
@@ -229,7 +234,7 @@ public class DetectionModelClassifier {
     }
 
     public List<Recognition> getAllOutPut() {
-        final List<Recognition> recognitions = new ArrayList<>(NUM_DETECTIONS);
+        recognitions = new ArrayList<>(NUM_DETECTIONS);
         for (int i = 0; i < NUM_DETECTIONS; ++i) {
             final RectF detection =
                     new RectF(

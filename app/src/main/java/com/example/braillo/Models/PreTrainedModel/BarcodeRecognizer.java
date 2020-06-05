@@ -3,8 +3,6 @@ package com.example.braillo.Models.PreTrainedModel;
 import android.app.Activity;
 import android.app.Application;
 import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -23,48 +21,42 @@ import java.util.concurrent.ExecutionException;
 
 public class BarcodeRecognizer {
 
-    private Bitmap bitmap;
-    private Activity activity;
-    private Application application;
 
-    public BarcodeRecognizer(Bitmap bitmap, Activity activity, Application application) {
-        this.bitmap = bitmap;
-        this.activity = activity;
-        this.application = application;
-    }
+    static FirebaseVisionBarcodeDetector detector;
+    static FirebaseVisionBarcodeDetectorOptions options;
+    static FirebaseVisionImage image;
+    static Task<List<FirebaseVisionBarcode>> result;
+    static BarcodeRepository barcodeRepository;
 
-
-    public String getBarcode() {
+    public static String getBarcode(Bitmap bitmap, final Activity activity, final Application application) {
         final String[] rawValue = {""};
-        FirebaseVisionBarcodeDetectorOptions options =
+        options =
                 new FirebaseVisionBarcodeDetectorOptions.Builder()
                         .setBarcodeFormats(
 
                                 FirebaseVisionBarcode.FORMAT_ALL_FORMATS)
                         .build();
 
-        FirebaseVisionBarcodeDetector detector = FirebaseVision.getInstance()
+        detector = FirebaseVision.getInstance()
                 .getVisionBarcodeDetector(options);
-        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
-        Task<List<FirebaseVisionBarcode>> result = detector.detectInImage(image)
+        image = FirebaseVisionImage.fromBitmap(bitmap);
+        result = detector.detectInImage(image)
                 .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
                     @Override
                     public void onSuccess(List<FirebaseVisionBarcode> barcodes) {
                         for (FirebaseVisionBarcode barcode : barcodes) {
-                            Rect bounds = barcode.getBoundingBox();
-                            Point[] corners = barcode.getCornerPoints();
 
-                            BarcodeRepository barcodeRepository = new BarcodeRepository(application );
-                            Log.d("barcode " , barcode.getRawValue());
-                          //  Toast.makeText(activity, barcode.getRawValue(), Toast.LENGTH_SHORT).show();
-                           try {
-                                if(barcodeRepository.getNameCode(barcode.getRawValue())!=null &&
-                                        barcodeRepository.getNameCode(barcode.getRawValue()).size()!=0) {
-                                     Log.d("barcode", barcodeRepository.getNameCode(barcode.getRawValue()).get(0).getBarcodeName());
-                                }
-                                else
-                                     //Log.d("barcode" , barcode.getRawValue());
-                                     Log.d("barcode", barcode.getFormat()+"");
+
+                            barcodeRepository = new BarcodeRepository(application);
+                            Log.d("barcode ", barcode.getRawValue());
+                            //  Toast.makeText(activity, barcode.getRawValue(), Toast.LENGTH_SHORT).show();
+                            try {
+                                if (barcodeRepository.getNameCode(barcode.getRawValue()) != null &&
+                                        barcodeRepository.getNameCode(barcode.getRawValue()).size() != 0) {
+                                    Log.d("barcode", barcodeRepository.getNameCode(barcode.getRawValue()).get(0).getBarcodeName());
+                                } else
+                                    //Log.d("barcode" , barcode.getRawValue());
+                                    Log.d("barcode", barcode.getFormat() + "");
                             } catch (ExecutionException e) {
                                 e.printStackTrace();
                             } catch (InterruptedException e) {

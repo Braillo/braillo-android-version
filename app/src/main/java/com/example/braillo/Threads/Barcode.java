@@ -11,14 +11,14 @@ public class Barcode extends Thread {
     Bitmap bitmap;
     Application application;
 
-    public Barcode(Activity activity, Bitmap bitmap , Application application)  {
+    public Barcode(Activity activity, Bitmap bitmap, Application application) {
         this.activity = activity;
         this.bitmap = bitmap;
-        this.application=application;
+        this.application = application;
     }
 
     @Override
     public void run() {
-        UI_Connection.get_Barcode(bitmap, activity ,application);
+        UI_Connection.get_Barcode(bitmap, activity, application);
     }
 }

@@ -13,18 +13,14 @@ import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
 public class OCRRecognizer {
 
-    private Bitmap  bitmap;
-    private Activity activity;
 
-    public OCRRecognizer(Bitmap bitmap, Activity activity) {
-        this.bitmap = bitmap;
-        this.activity = activity;
-    }
+    static FirebaseVisionImage image;
+    static FirebaseVisionTextRecognizer textRecognizer;
 
-    public String OCR() {
+    public static String OCR(Bitmap bitmap, final Activity activity) {
         final String[] s = new String[1];
-        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
-        FirebaseVisionTextRecognizer textRecognizer = FirebaseVision.getInstance()
+        image = FirebaseVisionImage.fromBitmap(bitmap);
+        textRecognizer = FirebaseVision.getInstance()
                 .getOnDeviceTextRecognizer();
 
         textRecognizer.processImage(image)
@@ -32,7 +28,7 @@ public class OCRRecognizer {
                     @Override
                     public void onSuccess(FirebaseVisionText result) {
                         Voice.speak(activity, result.getText(), false);
-                        TextTranslation.translation(result.getText());
+                        // TextTranslation.translation(result.getText());
 
                     }
                 })

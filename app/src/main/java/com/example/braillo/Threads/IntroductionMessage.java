@@ -6,15 +6,17 @@ import android.media.MediaPlayer;
 
 public class IntroductionMessage extends Thread {
     Context context;
-    public IntroductionMessage(Context context){
+    MediaPlayer mediaPlayer;
+    AssetFileDescriptor descriptor;
+    public IntroductionMessage(Context context) {
         this.context = context;
     }
+
     @Override
     public void run() {
         try {
-            MediaPlayer mediaPlayer = new MediaPlayer();
-
-            AssetFileDescriptor descriptor = context.getAssets().openFd("AppCommand/welcomeMessage.mp3");
+            mediaPlayer = new MediaPlayer();
+            descriptor = context.getAssets().openFd("AppCommand/welcomeMessage.mp3");
             mediaPlayer.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
 
             descriptor.close();

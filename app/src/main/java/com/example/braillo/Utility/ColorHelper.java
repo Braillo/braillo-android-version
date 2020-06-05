@@ -5,11 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
 
-import androidx.palette.graphics.Palette;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import androidx.palette.graphics.Palette;
 
 
 public class ColorHelper {
@@ -220,17 +220,17 @@ public class ColorHelper {
                 Color c = new Color();
 
                 String[] namedColor = getColorName(red, green, blue);
-                if(namedColor!=null){
-                Voice.speak(activity,"ColorDetection/"+namedColor[0]+".mp3",true);}
-                else
-                    Voice.speak(activity, "AppCommand/can not identify.mp3",true);
+                if (namedColor != null) {
+                    Voice.speak(activity, "ColorDetection/" + namedColor[0] + ".mp3", true);
+                } else
+                    Voice.speak(activity, "AppCommand/can not identify.mp3", true);
                 Log.d("Color Data :", red + "," + green + "," + blue);
             }
         };
 
 
         if (bitmap != null && !bitmap.isRecycled()) {
-            Bitmap b= bitmap;
+            Bitmap b = bitmap;
             Palette.from(bitmap).generate(paletteListener);
         }
 
