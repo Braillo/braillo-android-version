@@ -2,6 +2,7 @@ package com.example.braillo.Models.PreTrainedModel;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.example.braillo.Utility.Voice;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,7 +33,7 @@ public class OCRRecognizer {
 
                         Voice.speak(activity, result.getText(), false);
                         // TextTranslation.translation(result.getText());
-
+                        Log.d("IN OCR",result.getText());
                     }
                 })
                 .addOnFailureListener(

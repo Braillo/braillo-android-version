@@ -60,18 +60,21 @@ public class UI_Connection {
     }
 
     public static void get_Barcode(Bitmap bitmap, final Activity activity, Application application) {
-        barcodeRecognizer = new BarcodeRecognizer();
+        if (barcodeRecognizer == null)
+            barcodeRecognizer = new BarcodeRecognizer();
         barcodeRecognizer.getBarcode(bitmap, activity, application);
     }
 
     public static void OCR(Bitmap bitmap, final Activity activity) {
-        OCRRecognizer ocrRecognizer = new OCRRecognizer();
+        if (ocrRecognizer == null)
+            ocrRecognizer = new OCRRecognizer();
         ocrRecognizer.OCR(bitmap, activity);
     }
 
     public static void colorDetection(Bitmap bitmap, final Activity activity) {
-        color = new ColorHelper(activity, bitmap);
-        color.paletteProcessing();
+        if (color == null)
+            color = new ColorHelper();
+        color.getColor(activity, bitmap);
     }
 
     //static voice

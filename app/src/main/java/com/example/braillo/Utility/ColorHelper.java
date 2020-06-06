@@ -161,12 +161,6 @@ public class ColorHelper {
     private Bitmap bitmap;
     private Activity activity;
 
-    public ColorHelper(Activity activity, Bitmap bitmap) {
-        this.bitmap = bitmap;
-        this.activity = activity;
-
-
-    }
 
 
     private void logSwatchData(Palette.Swatch swatch, String swatchName) {
@@ -190,8 +184,12 @@ public class ColorHelper {
                 " ,TitleTextColor: " + titleTextColor +
                 " ,BodyTextColor: " + bodyTextColor);
     }
-
-    public void paletteProcessing() {
+    public void getColor(Activity activity,Bitmap bitmap){
+        this.bitmap = bitmap;
+        this.activity = activity;
+        paletteProcessing();
+    }
+    private void paletteProcessing() {
 
 
         Palette.PaletteAsyncListener paletteListener = new Palette.PaletteAsyncListener() {
@@ -236,7 +234,7 @@ public class ColorHelper {
 
     }
 
-    public String[] getColorName(int red, int green, int blue) { //To find the closest color name
+    private String[] getColorName(int red, int green, int blue) { //To find the closest color name
         int r, g, b, max = 66000, min = 0;
         String[] name = null;
         for (String[] color : colorList) {

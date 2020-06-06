@@ -111,11 +111,9 @@ public class Voice {
     }
 
     private static String localizer(String s) {
-        if (Language == "en") {
-
+        if (Language == "en" && s.contains(".mp3")) {
             temp = s.split("/");
             return temp[1].substring(0, temp[1].length() - 4);
-
         }
         return s;
     }

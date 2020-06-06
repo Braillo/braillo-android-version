@@ -88,7 +88,8 @@ public class CameraConfiguration {
 
         foto.updateConfiguration(flash ? OnTorch : offTorch);
         flash = flash != true;
-        if(!flash){
+
+        if(flash){
             Voice.speak(activity, "AppCommand/flash opened.mp3",true);
         }else
             Voice.speak(activity,"AppCommand/flash closed.mp3" ,true);
