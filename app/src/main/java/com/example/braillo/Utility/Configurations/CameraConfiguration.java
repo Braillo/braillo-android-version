@@ -5,6 +5,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.braillo.Activities.MainActivity;
+import com.example.braillo.Utility.Voice;
+
 import androidx.core.app.ActivityCompat;
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.configuration.UpdateConfiguration;
@@ -81,10 +84,14 @@ public class CameraConfiguration {
     UpdateConfiguration OnTorch = UpdateConfiguration.builder().flash(torch()).build();
     UpdateConfiguration offTorch = UpdateConfiguration.builder().flash(off()).build();
 
-    public void toggleFlash() {
+    public void toggleFlash(Activity activity) {
 
         foto.updateConfiguration(flash ? OnTorch : offTorch);
-        flash = flash == true ? false : true;
+        flash = flash != true;
+        if(!flash){
+            Voice.speak(activity,"AppCommand/flash opend.mp3" ,true);
+        }else
+            Voice.speak(activity,"AppCommand/flash closed.mp3" ,true);
 
     }
 

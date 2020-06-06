@@ -6,6 +6,8 @@ import android.app.Application;
 import com.example.braillo.Threads.Barcode;
 import com.example.braillo.Threads.ColorDetection;
 import com.example.braillo.Threads.CurrencyDetection;
+import com.example.braillo.Threads.FlashToggle;
+import com.example.braillo.Threads.LanguageToggle;
 import com.example.braillo.Threads.OCR;
 import com.example.braillo.Threads.ObjectDetection;
 import com.example.braillo.Utility.Configurations.BitmapConfiguration;
@@ -17,6 +19,8 @@ public class ThreadHelper {
     ObjectDetection objectDetectionThread;
     Barcode barcodeThread;
     OCR ocrThread;
+    LanguageToggle languageToggleThread;
+    FlashToggle flashToggleThred;
     ColorDetection colorThread;
     Activity activity;
     Application application;
@@ -30,6 +34,17 @@ public class ThreadHelper {
         this.application = application;
     }
 
+    public  void flashToggleThread(){
+        killAllThreadsAndReleaseVoice();
+        flashToggleThred = new FlashToggle(activity , cameraConfigurations);
+        flashToggleThred.start();
+    }
+
+    public void languageToggleThread(){
+        killAllThreadsAndReleaseVoice();
+        languageToggleThread = new LanguageToggle(activity);
+        languageToggleThread.start();
+    }
     public void ColorThread() {
         killAllThreadsAndReleaseVoice();
         colorThread = new ColorDetection(activity, bitmapConfiguration.getBitmap(cameraConfigurations.getFrame()));
@@ -69,6 +84,12 @@ public class ThreadHelper {
 
         if (currencyDetectionThread != null && currencyDetectionThread.isAlive()) {
             currencyDetectionThread.interrupt();
+        }
+        if (languageToggleThread != null && languageToggleThread.isAlive()) {
+            languageToggleThread.interrupt();
+        }
+        if (flashToggleThred != null && flashToggleThred.isAlive()) {
+            flashToggleThred.interrupt();
         }
         if (objectDetectionThread != null && objectDetectionThread.isAlive()) {
             objectDetectionThread.interrupt();

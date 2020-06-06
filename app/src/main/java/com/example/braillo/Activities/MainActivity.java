@@ -158,7 +158,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDoubleClick(View view) {
                 if (hasCameraPermission) {
-                    cameraConfigurations.toggleFlash();
+                    threadHelper.flashToggleThread();
+
                 }
             }
         }));
@@ -168,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onLongClick(View v) {
                 if (hasCameraPermission) {
                     Voice.Language = Voice.Language == "Ar" ? "En" : "Ar";
+                   threadHelper.languageToggleThread();
                 }
                 return true;
             }
