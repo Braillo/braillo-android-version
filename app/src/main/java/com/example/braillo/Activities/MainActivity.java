@@ -76,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
 
         importViews();
         cameraConfigurations = new CameraConfiguration(cameraView, this, focusView);
-        cameraConfigurations.startCamera();
+        if (hasCameraPermission)
+            cameraConfigurations.startCamera();
         bitmapConfiguration = new BitmapConfiguration();
 
 
@@ -89,7 +90,8 @@ public class MainActivity extends AppCompatActivity {
         ActivityHelper.hideNotificationBar(this);
 
         UI_Connection.fillMap();
-        introductionMessageHelper.introductionMessage(hasCameraPermission);
+        if (hasCameraPermission)
+            introductionMessageHelper.introductionMessage(hasCameraPermission);
         mainScreen();
 
 
@@ -132,9 +134,9 @@ public class MainActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 hasCameraPermission = true;
                 introductionMessageHelper.introductionMessage(hasCameraPermission);
-
                 cameraConfigurations.startCamera();
-                cameraView.setVisibility(View.VISIBLE);
+
+
             } else {
 
                 hasCameraPermission = false;
@@ -168,8 +170,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v) {
                 if (hasCameraPermission) {
-                    Voice.Language = Voice.Language == "Ar" ? "En" : "Ar";
-                   threadHelper.languageToggleThread();
+                    Voice.Language = Voice.Language == "ar" ? "en" : "ar";
+                    threadHelper.languageToggleThread();
+                    introductionMessageHelper.introductionMessage(hasCameraPermission);
                 }
                 return true;
             }

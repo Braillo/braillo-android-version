@@ -13,7 +13,7 @@ public class Voice {
 
     private static MediaPlayer mediaPlayer;
     private static TextToSpeech mTTS;
-    public static String Language = "Ar";
+    public static String Language = Locale.getDefault().getLanguage();
     private static String[] temp;
 
     private static void stopTTS() {
@@ -67,7 +67,7 @@ public class Voice {
     }
 
     public static void speak(Activity activity, final String s, boolean flag) {
-        if (Language == "En") {
+        if (Language == "en") {
             final String x = localizer(s);
             release();
             mTTS = new TextToSpeech(activity, new TextToSpeech.OnInitListener() {
@@ -111,7 +111,7 @@ public class Voice {
     }
 
     private static String localizer(String s) {
-        if (Language == "En") {
+        if (Language == "en") {
 
             temp = s.split("/");
             return temp[1].substring(0, temp[1].length() - 4);

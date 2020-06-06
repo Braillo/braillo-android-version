@@ -6,13 +6,15 @@ import com.example.braillo.Utility.Voice;
 
 public class IntroductionMessage extends Thread {
     Activity activity;
+    String S ;
 
-    public IntroductionMessage(Activity activity) {
+    public IntroductionMessage(Activity activity , String s) {
         this.activity = activity;
+        this.S = s;
     }
 
     @Override
     public void run() {
-        Voice.speak(activity, "AppCommand/welcomeMessage.mp3", true);
+        Voice.speak(activity, S, true);
     }
 }
