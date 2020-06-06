@@ -12,23 +12,26 @@ import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslatorOption
 
 public class TextTranslation {
 
-    static FirebaseModelDownloadConditions conditions;
-    static FirebaseTranslatorOptions options;
+     FirebaseModelDownloadConditions conditions;
+     FirebaseTranslatorOptions options;
+     FirebaseTranslator  englishGermanTranslator;
+     public TextTranslation(){
+         options =
+                 new FirebaseTranslatorOptions.Builder()
+                         .setSourceLanguage(FirebaseTranslateLanguage.EN)
+                         .setTargetLanguage(FirebaseTranslateLanguage.AR)
+                         .build();
+         englishGermanTranslator =
+                 FirebaseNaturalLanguage.getInstance().getTranslator(options);
 
-    public static void translation(final String text) {
+         conditions = new FirebaseModelDownloadConditions.Builder()
+                 .requireWifi()
+                 .build();
+     }
+
+    public  void translation(final String text) {
         // Create an English-German translator:
-        options =
-                new FirebaseTranslatorOptions.Builder()
-                        .setSourceLanguage(FirebaseTranslateLanguage.EN)
-                        .setTargetLanguage(FirebaseTranslateLanguage.AR)
-                        .build();
 
-        final FirebaseTranslator englishGermanTranslator =
-                FirebaseNaturalLanguage.getInstance().getTranslator(options);
-
-        conditions = new FirebaseModelDownloadConditions.Builder()
-                .requireWifi()
-                .build();
         englishGermanTranslator.downloadModelIfNeeded(conditions)
                 .addOnSuccessListener(
                         new OnSuccessListener<Void>() {

@@ -1,32 +1,18 @@
 package com.example.braillo.Threads;
 
-import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
+import android.app.Activity;
+
+import com.example.braillo.Utility.Voice;
 
 public class IntroductionMessage extends Thread {
-    Context context;
-    MediaPlayer mediaPlayer;
-    AssetFileDescriptor descriptor;
-    public IntroductionMessage(Context context) {
-        this.context = context;
+    Activity activity;
+
+    public IntroductionMessage(Activity activity) {
+        this.activity = activity;
     }
 
     @Override
     public void run() {
-        try {
-            mediaPlayer = new MediaPlayer();
-            descriptor = context.getAssets().openFd("AppCommand/welcomeMessage.mp3");
-            mediaPlayer.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
-
-            descriptor.close();
-
-            mediaPlayer.prepare();
-            mediaPlayer.setVolume(1f, 1f);
-            mediaPlayer.setLooping(false);
-            mediaPlayer.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Voice.speak(activity, "AppCommand/welcomeMessage.mp3", true);
     }
 }

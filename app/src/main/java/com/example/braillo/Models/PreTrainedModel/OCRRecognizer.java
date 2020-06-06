@@ -14,15 +14,17 @@ import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 public class OCRRecognizer {
 
 
-    static FirebaseVisionImage image;
-    static FirebaseVisionTextRecognizer textRecognizer;
+    FirebaseVisionImage image;
+    FirebaseVisionTextRecognizer textRecognizer;
 
-    public static String OCR(Bitmap bitmap, final Activity activity) {
-        final String[] s = new String[1];
-        image = FirebaseVisionImage.fromBitmap(bitmap);
+    public OCRRecognizer() {
         textRecognizer = FirebaseVision.getInstance()
                 .getOnDeviceTextRecognizer();
+    }
 
+    public void OCR(Bitmap bitmap, final Activity activity) {
+
+        image = FirebaseVisionImage.fromBitmap(bitmap);
         textRecognizer.processImage(image)
                 .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                     @Override
@@ -41,6 +43,6 @@ public class OCRRecognizer {
 
                             }
                         });
-        return s[0];
+
     }
 }

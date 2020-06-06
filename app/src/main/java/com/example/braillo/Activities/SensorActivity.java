@@ -41,7 +41,7 @@ public class SensorActivity implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
             Log.d("onSensorChanged", event.values[0] + "");
-            if (event.values[0] >= 1.0)
+             if (event.values[0] >= 1.0)
                 ma.getCameraConfigurations().toggleFlash(false);
             else
                 ma.getCameraConfigurations().toggleFlash(true);

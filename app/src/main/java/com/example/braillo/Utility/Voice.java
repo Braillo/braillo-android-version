@@ -65,10 +65,13 @@ public class Voice {
     }
 
     public static void speak(Activity activity, final String s, boolean flag) {
+
         if (flag) {
             releaseTTS();
             playAssetSound(activity, s);
+
             Log.i("speak debug", "speak: in currency & detection");
+
         } else {
             Log.i("speak debug", "speak: in ocr :: " + s);
             release();
@@ -85,6 +88,10 @@ public class Voice {
                 }
             });
         }
+    }
 
+
+    public static String getCanNot() {
+        return "AppCommand/can not identify.mp3";
     }
 }

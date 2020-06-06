@@ -4,35 +4,50 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+
+import org.jetbrains.annotations.Nullable;
+
 import io.fotoapparat.Fotoapparat;
+import io.fotoapparat.configuration.Configuration;
 import io.fotoapparat.configuration.UpdateConfiguration;
 import io.fotoapparat.error.CameraErrorListener;
 import io.fotoapparat.exception.camera.CameraException;
+import io.fotoapparat.parameter.AntiBandingMode;
+import io.fotoapparat.parameter.Flash;
+import io.fotoapparat.parameter.FocusMode;
+import io.fotoapparat.parameter.FpsRange;
+import io.fotoapparat.parameter.Resolution;
 import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.selector.ResolutionSelectorsKt;
 import io.fotoapparat.view.CameraView;
 import io.fotoapparat.view.FocusView;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+import kotlin.ranges.IntRange;
 
 import static io.fotoapparat.selector.FlashSelectorsKt.autoFlash;
-import static io.fotoapparat.selector.FlashSelectorsKt.autoRedEye;
 import static io.fotoapparat.selector.FlashSelectorsKt.off;
 import static io.fotoapparat.selector.FlashSelectorsKt.torch;
 import static io.fotoapparat.selector.LensPositionSelectorsKt.back;
-import static io.fotoapparat.selector.SelectorsKt.firstAvailable;
 
 public class CameraConfiguration {
 
     private final int CameraCode = 1;
     private Frame frame;
     private Fotoapparat foto;
+    private CameraView cameraView;
+    private Context activity;
+    private FocusView focusView;
 
-    public CameraConfiguration(CameraView cameraView, final Context activity, FocusView focusView) {
-        foto = cameraConfiguration(cameraView, activity, focusView);
+    public CameraConfiguration(CameraView cameraView, Context activity, FocusView focusView) {
+        foto = cameraConfiguration(cameraView, activity, focusView, true);
+        this.cameraView = cameraView;
+        this.activity = activity;
+        this.focusView = focusView;
     }
 
     public Frame getFrame() {
@@ -40,7 +55,7 @@ public class CameraConfiguration {
         return frame;
     }
 
-    private Fotoapparat cameraConfiguration(CameraView cameraView, final Context activity, FocusView focusView) {
+    private Fotoapparat cameraConfiguration(CameraView cameraView, Context activity, FocusView focusView, boolean flag) {
         return Fotoapparat
                 .with(activity)
                 .into(cameraView)
@@ -49,16 +64,12 @@ public class CameraConfiguration {
                 .photoResolution(ResolutionSelectorsKt.highestResolution())
                 .lensPosition(back())
                 //.focusView(focusView)
-                .flash(firstAvailable(
-                        autoRedEye(),
-                        autoFlash(),
-                        torch(),
-                        off()))
+                .flash(flag ? torch() : off())
                 .frameProcessor(new CameraConfiguration.SampleFrameProcessor())
                 .cameraErrorCallback(new CameraErrorListener() {
                     @Override
                     public void onError(CameraException e) {
-                        Toast.makeText(activity, e.toString(), Toast.LENGTH_LONG).show();
+
                         Log.i("main", e.toString());
                     }
                 })
@@ -78,15 +89,12 @@ public class CameraConfiguration {
                 new String[]{Manifest.permission.CAMERA}, CameraCode);
     }
 
-    public void toggleFlash(boolean flag) {
+    UpdateConfiguration OnTorch = UpdateConfiguration.builder().flash(torch()).build();
+    UpdateConfiguration offTorch = UpdateConfiguration.builder().flash( off()).build();
+    public void toggleFlash(final boolean flag) {
 
-        foto.updateConfiguration(
-                UpdateConfiguration.builder()
-                        .flash(
-                                flag ? torch() : off()
-                        )
-                        .build()
-        );
+        // foto.updateConfiguration( flag ? OnTorch:offTorch );
+
     }
 
     private class SampleFrameProcessor implements FrameProcessor {

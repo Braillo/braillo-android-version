@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import com.example.braillo.Threads.IntroductionMessage;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class IntroductionMessageHelper {
@@ -14,7 +16,7 @@ public class IntroductionMessageHelper {
     boolean firstStart;
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
-    com.example.braillo.Threads.IntroductionMessage introductionMessage;
+    IntroductionMessage introductionMessage;
 
     public IntroductionMessageHelper(Activity activity, Context context) {
         this.activity = activity;
@@ -32,7 +34,7 @@ public class IntroductionMessageHelper {
 
     public void removeIntroductionMessage(boolean hasCameraPermission) {
         if (hasCameraPermission) {
-            introductionMessage = new com.example.braillo.Threads.IntroductionMessage(context);
+            introductionMessage = new IntroductionMessage(activity);
             introductionMessage.start();
             prefs = activity.getSharedPreferences("prefs", MODE_PRIVATE);
             editor = prefs.edit();

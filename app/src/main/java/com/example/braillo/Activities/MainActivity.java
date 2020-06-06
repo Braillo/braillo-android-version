@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         cameraConfigurations = new CameraConfiguration(cameraView, this, focusView);
         cameraConfigurations.startCamera();
         bitmapConfiguration = new BitmapConfiguration();
-       // sensorActivity = new SensorActivity((SensorManager) getSystemService(SENSOR_SERVICE), this);
+        sensorActivity = new SensorActivity((SensorManager) getSystemService(SENSOR_SERVICE), this);
 
         threadHelper = new ThreadHelper(this, bitmapConfiguration, cameraConfigurations, getApplication());
         introductionMessageHelper = new IntroductionMessageHelper(this, this);
@@ -118,15 +118,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
-        /*if (sensorActivity != null)
-            sensorActivity.onResume();*/
+        if (sensorActivity != null)
+            sensorActivity.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-      /*  if (sensorActivity != null)
-            sensorActivity.onPause();*/
+        if (sensorActivity != null)
+            sensorActivity.onPause();
     }
 
     @Override
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-       // sensorActivity.onPause();
+       sensorActivity.onPause();
     }
 
     @Override

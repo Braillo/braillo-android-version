@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.braillo.DataBase.BarcodeRepository;
+import com.example.braillo.Utility.Voice;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -22,23 +23,23 @@ import java.util.concurrent.ExecutionException;
 public class BarcodeRecognizer {
 
 
-    static FirebaseVisionBarcodeDetector detector;
-    static FirebaseVisionBarcodeDetectorOptions options;
-    static FirebaseVisionImage image;
-    static Task<List<FirebaseVisionBarcode>> result;
-    static BarcodeRepository barcodeRepository;
+    private FirebaseVisionBarcodeDetector detector;
+    private FirebaseVisionBarcodeDetectorOptions options;
+    private FirebaseVisionImage image;
+    private Task<List<FirebaseVisionBarcode>> result;
+    private BarcodeRepository barcodeRepository;
 
-    public static String getBarcode(Bitmap bitmap, final Activity activity, final Application application) {
-        final String[] rawValue = {""};
-        options =
-                new FirebaseVisionBarcodeDetectorOptions.Builder()
-                        .setBarcodeFormats(
-
-                                FirebaseVisionBarcode.FORMAT_ALL_FORMATS)
-                        .build();
-
+    public BarcodeRecognizer( ){
+        options = new FirebaseVisionBarcodeDetectorOptions.Builder()
+                .setBarcodeFormats(
+                        FirebaseVisionBarcode.FORMAT_ALL_FORMATS)
+                .build();
         detector = FirebaseVision.getInstance()
                 .getVisionBarcodeDetector(options);
+    }
+    public void getBarcode(Bitmap bitmap, final Activity activity, final Application application) {
+
+
         image = FirebaseVisionImage.fromBitmap(bitmap);
         result = detector.detectInImage(image)
                 .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
@@ -53,10 +54,13 @@ public class BarcodeRecognizer {
                             try {
                                 if (barcodeRepository.getNameCode(barcode.getRawValue()) != null &&
                                         barcodeRepository.getNameCode(barcode.getRawValue()).size() != 0) {
+                                    Voice.speak(activity, barcodeRepository.getNameCode(barcode.getRawValue()).get(0).getBarcodeName(),false);
                                     Log.d("barcode", barcodeRepository.getNameCode(barcode.getRawValue()).get(0).getBarcodeName());
                                 } else
                                     //Log.d("barcode" , barcode.getRawValue());
-                                    Log.d("barcode", barcode.getFormat() + "");
+                                    Voice.speak(activity,Voice.getCanNot(),false);
+
+                                Log.d("barcode", barcode.getFormat() + "");
                             } catch (ExecutionException e) {
                                 e.printStackTrace();
                             } catch (InterruptedException e) {
@@ -74,6 +78,6 @@ public class BarcodeRecognizer {
                         Toast.makeText(activity, "Cant not find any code", Toast.LENGTH_SHORT).show();
                     }
                 });
-        return rawValue[0];
+
     }
 }
