@@ -61,7 +61,7 @@ public class TabsSwipeHelper {
         switch (gestures.getSwipeStep()) {
             case 1:
                 if (!currencyFlag) {
-                    Voice.speak(activity, "AppCommand/currencyFrg.mp3", true);
+                    Voice.speak(activity, "AppCommand/currency detection.mp3", true);
                     convertFlags(gestures.getSwipeStep());
                 } else {
 
@@ -72,7 +72,7 @@ public class TabsSwipeHelper {
                 return;
             case 2:
                 if (!ocrFlag) {
-                    Voice.speak(activity, "AppCommand/ocrFrg.mp3", true);
+                    Voice.speak(activity, "AppCommand/Text recognizer.mp3", true);
                     convertFlags(gestures.getSwipeStep());
                 } else {
 
@@ -83,7 +83,7 @@ public class TabsSwipeHelper {
                 return;
             case 3:
                 if (!barcodeFlag) {
-                    Voice.speak(activity, "AppCommand/barcodeFrg.mp3", true);
+                    Voice.speak(activity, "AppCommand/barcode Recognizer.mp3", true);
                     convertFlags(gestures.getSwipeStep());
                 } else {
                     threadHelper.barcodeThread();
@@ -93,7 +93,7 @@ public class TabsSwipeHelper {
                 return;
             case 4:
                 if (!colorFlag) {
-                    Voice.speak(activity, "AppCommand/colorFrg.mp3", true);
+                    Voice.speak(activity, "AppCommand/color recognizer.mp3", true);
                     convertFlags(gestures.getSwipeStep());
                 } else {
                     threadHelper.ColorThread();
@@ -103,7 +103,7 @@ public class TabsSwipeHelper {
                 return;
             default:
                 if (!detectionFlag) {
-                    Voice.speak(activity, "AppCommand/objFrg.mp3", true);
+                    Voice.speak(activity, "AppCommand/object detection.mp3", true);
                     convertFlags(gestures.getSwipeStep());
                 } else {
                     threadHelper.detectionThread();
