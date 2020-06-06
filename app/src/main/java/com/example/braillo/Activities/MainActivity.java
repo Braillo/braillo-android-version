@@ -2,10 +2,6 @@ package com.example.braillo.Activities;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +16,7 @@ import com.example.braillo.Utility.Helper.IntroductionMessageHelper;
 import com.example.braillo.Utility.Helper.TabsSwipeHelper;
 import com.example.braillo.Utility.Helper.ThreadHelper;
 import com.example.braillo.Utility.UI_Connection;
+import com.example.braillo.Utility.Voice;
 import com.github.pwittchen.swipe.library.rx2.Swipe;
 import com.pedromassango.doubleclick.DoubleClick;
 import com.pedromassango.doubleclick.DoubleClickListener;
@@ -47,7 +44,7 @@ future work -->
 age and gender detection
 
 * */
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
+public class MainActivity extends AppCompatActivity {
 
     private final int CameraCode = 1;
     BitmapConfiguration bitmapConfiguration;
@@ -58,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     ThreadHelper threadHelper;
     TabsSwipeHelper tabsSwipeHelper;
     IntroductionMessageHelper introductionMessageHelper;
-    SensorActivity sensorActivity;
+
     private FocusView focusView;
     private boolean hasCameraPermission = false;
     private CameraView cameraView;
@@ -81,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         cameraConfigurations = new CameraConfiguration(cameraView, this, focusView);
         cameraConfigurations.startCamera();
         bitmapConfiguration = new BitmapConfiguration();
-        sensorActivity = new SensorActivity((SensorManager) getSystemService(SENSOR_SERVICE), this);
+
 
         threadHelper = new ThreadHelper(this, bitmapConfiguration, cameraConfigurations, getApplication());
         introductionMessageHelper = new IntroductionMessageHelper(this, this);
@@ -115,19 +112,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (sensorActivity != null)
-            sensorActivity.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (sensorActivity != null)
-            sensorActivity.onPause();
-    }
 
     @Override
     protected void onStop() {
@@ -141,11 +125,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-       sensorActivity.onPause();
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -172,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             @Override
             public void onSingleClick(View view) {
-
                 if (hasCameraPermission)
                     tabsSwipeHelper.tabs(activity);
             }
@@ -180,8 +158,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onDoubleClick(View view) {
                 if (hasCameraPermission) {
-                    if (gestures.getSwipeStep() == 0)
-                        threadHelper.currencyThread();
+                    cameraConfigurations.toggleFlash();
                 }
             }
         }));
@@ -190,8 +167,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public boolean onLongClick(View v) {
                 if (hasCameraPermission) {
-                    if (gestures.getSwipeStep() == 0)
-                        threadHelper.OCRThread();
+                    Voice.Language = Voice.Language == "Ar" ? "En" : "Ar";
                 }
                 return true;
             }
@@ -212,13 +188,4 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-       // sensorActivity.onSensorChanged(event);
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
 }

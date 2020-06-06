@@ -6,30 +6,17 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
-
-import org.jetbrains.annotations.Nullable;
-
 import io.fotoapparat.Fotoapparat;
-import io.fotoapparat.configuration.Configuration;
 import io.fotoapparat.configuration.UpdateConfiguration;
 import io.fotoapparat.error.CameraErrorListener;
 import io.fotoapparat.exception.camera.CameraException;
-import io.fotoapparat.parameter.AntiBandingMode;
-import io.fotoapparat.parameter.Flash;
-import io.fotoapparat.parameter.FocusMode;
-import io.fotoapparat.parameter.FpsRange;
-import io.fotoapparat.parameter.Resolution;
 import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.selector.ResolutionSelectorsKt;
 import io.fotoapparat.view.CameraView;
 import io.fotoapparat.view.FocusView;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
-import kotlin.ranges.IntRange;
 
-import static io.fotoapparat.selector.FlashSelectorsKt.autoFlash;
 import static io.fotoapparat.selector.FlashSelectorsKt.off;
 import static io.fotoapparat.selector.FlashSelectorsKt.torch;
 import static io.fotoapparat.selector.LensPositionSelectorsKt.back;
@@ -42,12 +29,14 @@ public class CameraConfiguration {
     private CameraView cameraView;
     private Context activity;
     private FocusView focusView;
+    private boolean flash;
 
     public CameraConfiguration(CameraView cameraView, Context activity, FocusView focusView) {
         foto = cameraConfiguration(cameraView, activity, focusView, true);
         this.cameraView = cameraView;
         this.activity = activity;
         this.focusView = focusView;
+        flash = false;
     }
 
     public Frame getFrame() {
@@ -90,10 +79,12 @@ public class CameraConfiguration {
     }
 
     UpdateConfiguration OnTorch = UpdateConfiguration.builder().flash(torch()).build();
-    UpdateConfiguration offTorch = UpdateConfiguration.builder().flash( off()).build();
-    public void toggleFlash(final boolean flag) {
+    UpdateConfiguration offTorch = UpdateConfiguration.builder().flash(off()).build();
 
-        // foto.updateConfiguration( flag ? OnTorch:offTorch );
+    public void toggleFlash() {
+
+        foto.updateConfiguration(flash ? OnTorch : offTorch);
+        flash = flash == true ? false : true;
 
     }
 

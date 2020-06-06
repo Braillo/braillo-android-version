@@ -22,13 +22,14 @@ public class OCRRecognizer {
                 .getOnDeviceTextRecognizer();
     }
 
-    public void OCR(Bitmap bitmap, final Activity activity) {
+    public void OCR(Bitmap bitmap, final Activity activity ) {
 
         image = FirebaseVisionImage.fromBitmap(bitmap);
         textRecognizer.processImage(image)
                 .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                     @Override
                     public void onSuccess(FirebaseVisionText result) {
+
                         Voice.speak(activity, result.getText(), false);
                         // TextTranslation.translation(result.getText());
 

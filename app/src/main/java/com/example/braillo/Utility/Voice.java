@@ -13,6 +13,8 @@ public class Voice {
 
     private static MediaPlayer mediaPlayer;
     private static TextToSpeech mTTS;
+    public static String Language = "Ar";
+    private static String[] temp;
 
     private static void stopTTS() {
         if (Voice.mTTS != null) {
@@ -65,31 +67,56 @@ public class Voice {
     }
 
     public static void speak(Activity activity, final String s, boolean flag) {
-
-        if (flag) {
-            releaseTTS();
-            playAssetSound(activity, s);
-
-            Log.i("speak debug", "speak: in currency & detection");
-
-        } else {
-            Log.i("speak debug", "speak: in ocr :: " + s);
+        if (Language == "En") {
+            final String x = localizer(s);
             release();
             mTTS = new TextToSpeech(activity, new TextToSpeech.OnInitListener() {
                 @Override
                 public void onInit(int status) {
                     if (status == TextToSpeech.SUCCESS) {
                         int result = mTTS.setLanguage(Locale.ENGLISH);
-                        mTTS.speak(s, TextToSpeech.QUEUE_FLUSH, null);
+                        mTTS.speak(x, TextToSpeech.QUEUE_FLUSH, null);
 
                     } else {
                         Log.e("TTS", "Initialization failed");
                     }
                 }
             });
+
+        } else {
+
+            if (flag) {
+                releaseTTS();
+                playAssetSound(activity, s);
+
+                Log.i("speak debug", "speak: in currency & detection");
+
+            } else {
+                Log.i("speak debug", "speak: in ocr :: " + s);
+                release();
+                mTTS = new TextToSpeech(activity, new TextToSpeech.OnInitListener() {
+                    @Override
+                    public void onInit(int status) {
+                        if (status == TextToSpeech.SUCCESS) {
+                            int result = mTTS.setLanguage(Locale.ENGLISH);
+                            mTTS.speak(s, TextToSpeech.QUEUE_FLUSH, null);
+
+                        } else {
+                            Log.e("TTS", "Initialization failed");
+                        }
+                    }
+                });
+            }
         }
     }
 
+    private static String localizer(String s) {
+        if (Language == "En") {
+            temp = s.split("/");
+            return temp[1].substring(0, temp[1].length() - 4);
+        }
+        return s;
+    }
 
     public static String getCanNot() {
         return "AppCommand/can not identify.mp3";
