@@ -20,7 +20,7 @@ public class ThreadHelper {
     Barcode barcodeThread;
     OCR ocrThread;
     LanguageToggle languageToggleThread;
-    FlashToggle flashToggleThred;
+    FlashToggle flashToggleThread;
     ColorDetection colorThread;
     Activity activity;
     Application application;
@@ -34,17 +34,28 @@ public class ThreadHelper {
         this.application = application;
     }
 
-    public  void flashToggleThread(){
+    public void flashToggleThread() {
         killAllThreadsAndReleaseVoice();
-        flashToggleThred = new FlashToggle(activity , cameraConfigurations);
-        flashToggleThred.start();
+        if (flashToggleThread != null) {
+            flashToggleThread.run();
+        }
+        else {
+            flashToggleThread = new FlashToggle(activity, cameraConfigurations);
+            flashToggleThread.start();
+        }
     }
 
-    public void languageToggleThread(){
+    public void languageToggleThread() {
         killAllThreadsAndReleaseVoice();
-        languageToggleThread = new LanguageToggle(activity);
-        languageToggleThread.start();
+        if (languageToggleThread != null) {
+            languageToggleThread.run();
+        } else {
+            languageToggleThread = new LanguageToggle(activity);
+            languageToggleThread.start();
+        }
+
     }
+
     public void ColorThread() {
         killAllThreadsAndReleaseVoice();
         colorThread = new ColorDetection(activity, bitmapConfiguration.getBitmap(cameraConfigurations.getFrame()));
@@ -84,12 +95,6 @@ public class ThreadHelper {
 
         if (currencyDetectionThread != null && currencyDetectionThread.isAlive()) {
             currencyDetectionThread.interrupt();
-        }
-        if (languageToggleThread != null && languageToggleThread.isAlive()) {
-            languageToggleThread.interrupt();
-        }
-        if (flashToggleThred != null && flashToggleThred.isAlive()) {
-            flashToggleThred.interrupt();
         }
         if (objectDetectionThread != null && objectDetectionThread.isAlive()) {
             objectDetectionThread.interrupt();

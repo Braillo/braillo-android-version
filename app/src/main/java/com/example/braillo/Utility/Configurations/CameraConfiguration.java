@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.braillo.Activities.MainActivity;
 import com.example.braillo.Utility.Voice;
 
 import androidx.core.app.ActivityCompat;
@@ -89,7 +88,7 @@ public class CameraConfiguration {
         foto.updateConfiguration(flash ? OnTorch : offTorch);
         flash = flash != true;
         if(!flash){
-            Voice.speak(activity,"AppCommand/flash opend.mp3" ,true);
+            Voice.speak(activity, "AppCommand/flash opened.mp3",true);
         }else
             Voice.speak(activity,"AppCommand/flash closed.mp3" ,true);
 

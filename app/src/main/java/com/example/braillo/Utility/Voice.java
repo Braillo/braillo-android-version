@@ -42,7 +42,7 @@ public class Voice {
     public static void release() {
         releaseMediaPlayer();
         stopTTS();
-        releaseTTS();
+       // releaseTTS();
     }
 
     public static void playAssetSound(Context context, String labelVoiceFile) {
@@ -86,7 +86,7 @@ public class Voice {
         } else {
 
             if (flag) {
-                releaseTTS();
+                release();
                 playAssetSound(activity, s);
 
                 Log.i("speak debug", "speak: in currency & detection");
