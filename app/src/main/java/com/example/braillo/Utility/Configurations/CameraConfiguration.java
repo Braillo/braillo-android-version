@@ -34,11 +34,12 @@ public class CameraConfiguration {
     private boolean flash;
 
     public CameraConfiguration(CameraView cameraView, Context activity, FocusView focusView) {
-        foto = cameraConfiguration(cameraView, activity, focusView, true);
         this.cameraView = cameraView;
         this.activity = activity;
         this.focusView = focusView;
         flash = false;
+
+        foto = cameraConfiguration(cameraView, activity, focusView);
     }
 
     public Frame getFrame() {
@@ -46,7 +47,7 @@ public class CameraConfiguration {
         return frame;
     }
 
-    private Fotoapparat cameraConfiguration(CameraView cameraView, Context activity, FocusView focusView, boolean flag) {
+    private Fotoapparat cameraConfiguration(CameraView cameraView, Context activity, FocusView focusView ) {
         return Fotoapparat
                 .with(activity)
                 .into(cameraView)
@@ -55,7 +56,7 @@ public class CameraConfiguration {
                 .photoResolution(ResolutionSelectorsKt.highestResolution())
                 .lensPosition(back())
                 //.focusView(focusView)
-                .flash(flag ? torch() : off())
+                .flash(flash ? torch() : off())
                 .frameProcessor(new CameraConfiguration.SampleFrameProcessor())
                 .cameraErrorCallback(new CameraErrorListener() {
                     @Override

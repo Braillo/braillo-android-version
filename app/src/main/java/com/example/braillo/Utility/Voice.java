@@ -42,7 +42,7 @@ public class Voice {
     public static void release() {
         releaseMediaPlayer();
         stopTTS();
-       // releaseTTS();
+        // releaseTTS();
     }
 
     public static void playAssetSound(Context context, String labelVoiceFile) {

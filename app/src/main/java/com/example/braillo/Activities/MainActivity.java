@@ -160,11 +160,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDoubleClick(View view) {
                 if (hasCameraPermission) {
-                    try {
-                        threadHelper.flashToggleThread();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    threadHelper.flashToggleThread();
 
                 }
             }
@@ -175,11 +171,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onLongClick(View v) {
                 if (hasCameraPermission) {
                     Voice.Language = Voice.Language == "ar" ? "en" : "ar";
-                    try {
-                        threadHelper.languageToggleThread();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    threadHelper.languageToggleThread();
                     introductionMessageHelper.introductionMessage(hasCameraPermission);
                 }
                 return true;
