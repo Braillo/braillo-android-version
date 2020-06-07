@@ -32,7 +32,7 @@ public class ObjectDetection extends Thread {
             Log.d("object", list.get(0).getId() + "::" + list.get(0).getTitle());
             Voice.speak(activity, "ObjectDetection/" + list.get(0).getTitle() + ".mp3", true);
         } else {
-            Voice.speak(activity, "AppCommand/can not identify.mp3", true);
+            Voice.speak(activity, "AppCommands/can not identify.mp3", true);
         }
     }
 }

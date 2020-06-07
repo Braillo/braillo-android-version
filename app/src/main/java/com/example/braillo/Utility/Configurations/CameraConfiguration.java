@@ -86,14 +86,15 @@ public class CameraConfiguration {
 
     public void toggleFlash(Activity activity) {
 
-        foto.updateConfiguration(flash ? OnTorch : offTorch);
-        flash = flash != true;
+        foto.updateConfiguration(!flash ? OnTorch : offTorch);
 
-        if(flash){
-            Voice.speak(activity, "AppCommand/flash opened.mp3",true);
+
+        if(!flash){
+            Voice.speak(activity, "AppCommands/flash opened.mp3",true);
         }else
-            Voice.speak(activity,"AppCommand/flash closed.mp3" ,true);
+            Voice.speak(activity, "AppCommands/flash closed.mp3",true);
 
+        flash = flash != true;
     }
 
     private class SampleFrameProcessor implements FrameProcessor {

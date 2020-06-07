@@ -1,6 +1,7 @@
 package com.example.braillo.Activities;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final int CameraCode = 1;
     BitmapConfiguration bitmapConfiguration;
-
+    SharedPreferences prefArabic, prefEnglish;
     //layout
     LinearLayout linearLayout;
     //threads
@@ -64,15 +65,14 @@ public class MainActivity extends AppCompatActivity {
     private Swipe swipe;
     private Gestures gestures;
 
-    public CameraConfiguration getCameraConfigurations() {
-        return cameraConfigurations;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        prefArabic = this.getSharedPreferences("arabicIntro", MODE_PRIVATE);
+        prefEnglish = this.getSharedPreferences("EnglishIntro", MODE_PRIVATE);
+        Voice.init(this);
 
         importViews();
         cameraConfigurations = new CameraConfiguration(cameraView, this, focusView);
@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
         threadHelper = new ThreadHelper(this, bitmapConfiguration, cameraConfigurations, getApplication());
         introductionMessageHelper = new IntroductionMessageHelper(this, this);
+        Gestures.swipesNumber = Voice.Language.equals("ar") ? 3 : 5;
         swipeConfiguration();
         tabsSwipeHelper = new TabsSwipeHelper(gestures, threadHelper);
 
@@ -171,8 +172,15 @@ public class MainActivity extends AppCompatActivity {
             public boolean onLongClick(View v) {
                 if (hasCameraPermission) {
                     Voice.Language = Voice.Language == "ar" ? "en" : "ar";
-                    threadHelper.languageToggleThread();
-                    introductionMessageHelper.introductionMessage(hasCameraPermission);
+
+
+                    if (prefArabic.getBoolean("arabicIntro", true) &&
+                            prefEnglish.getBoolean("EnglishIntro", true)) {
+                        threadHelper.languageToggleThread();
+                    } else {
+                        introductionMessageHelper.introductionMessage(hasCameraPermission);
+                    }
+                    Gestures.swipesNumber = Voice.Language.equals("ar") ? 3 : 5;
                 }
                 return true;
             }

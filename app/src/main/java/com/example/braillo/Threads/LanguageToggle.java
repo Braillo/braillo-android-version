@@ -13,7 +13,8 @@ public class LanguageToggle extends Thread {
 
     @Override
     public void run() {
-        Voice.speak(activity, "AppCommand/application language is English.mp3", true);
+        Voice.speak(activity, "AppCommands/application language is English.mp3", true);
+
     }
 
 }

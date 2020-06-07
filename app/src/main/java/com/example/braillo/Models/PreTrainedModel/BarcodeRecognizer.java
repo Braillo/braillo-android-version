@@ -51,7 +51,7 @@ public class BarcodeRecognizer {
                             barcodeRepository = new BarcodeRepository(application);
                             Log.d("barcode ", barcode.getRawValue());
                             //  Toast.makeText(activity, barcode.getRawValue(), Toast.LENGTH_SHORT).show();
-                            try {
+                              try {
                                 if (barcodeRepository.getNameCode(barcode.getRawValue()) != null &&
                                         barcodeRepository.getNameCode(barcode.getRawValue()).size() != 0) {
                                     Voice.speak(activity, barcodeRepository.getNameCode(barcode.getRawValue()).get(0).getBarcodeName(),false);

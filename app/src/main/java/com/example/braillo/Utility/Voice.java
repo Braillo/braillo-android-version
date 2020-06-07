@@ -13,8 +13,24 @@ public class Voice {
 
     private static MediaPlayer mediaPlayer;
     private static TextToSpeech mTTS;
-    public static String Language = Locale.getDefault().getLanguage();
+    public static String Language = Locale.getDefault().getLanguage() != "en" && Locale.getDefault().getLanguage() != "ar" ?
+            "ar" : Locale.getDefault().getLanguage();
     private static String[] temp;
+
+    public static void init(final Activity activity) {
+        mTTS = new TextToSpeech(activity, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = mTTS.setLanguage(Locale.ENGLISH);
+
+                } else {
+                    playAssetSound(activity, "AppCommands/TTSError.mp3");
+                    Log.e("TTS", "Initialization failed");
+                }
+            }
+        });
+    }
 
     private static void stopTTS() {
         if (Voice.mTTS != null) {
@@ -68,20 +84,14 @@ public class Voice {
 
     public static void speak(Activity activity, final String s, boolean flag) {
         if (Language == "en") {
-            final String x = localizer(s);
-            release();
-            mTTS = new TextToSpeech(activity, new TextToSpeech.OnInitListener() {
-                @Override
-                public void onInit(int status) {
-                    if (status == TextToSpeech.SUCCESS) {
-                        int result = mTTS.setLanguage(Locale.ENGLISH);
-                        mTTS.speak(x, TextToSpeech.QUEUE_FLUSH, null);
-
-                    } else {
-                        Log.e("TTS", "Initialization failed");
-                    }
-                }
-            });
+            if (s.contains("englishWelcomeMessage")) {
+                playAssetSound(activity, s);
+            } else {
+                final String x = localizer(s);
+                release();
+                if (mTTS != null)
+                    mTTS.speak(x, TextToSpeech.QUEUE_FLUSH, null);
+            }
 
         } else {
 
@@ -94,24 +104,16 @@ public class Voice {
             } else {
                 Log.i("speak debug", "speak: in ocr :: " + s);
                 release();
-                mTTS = new TextToSpeech(activity, new TextToSpeech.OnInitListener() {
-                    @Override
-                    public void onInit(int status) {
-                        if (status == TextToSpeech.SUCCESS) {
-                            int result = mTTS.setLanguage(Locale.ENGLISH);
-                            mTTS.speak(s, TextToSpeech.QUEUE_FLUSH, null);
+                if (mTTS != null)
+                    mTTS.speak(s, TextToSpeech.QUEUE_FLUSH, null);
 
-                        } else {
-                            Log.e("TTS", "Initialization failed");
-                        }
-                    }
-                });
+
             }
         }
     }
 
     private static String localizer(String s) {
-        if (Language == "en" && s.contains(".mp3")) {
+        if (Language == "en" && s.contains(".mp3") ) {
             temp = s.split("/");
             return temp[1].substring(0, temp[1].length() - 4);
         }
@@ -119,6 +121,6 @@ public class Voice {
     }
 
     public static String getCanNot() {
-        return "AppCommand/can not identify.mp3";
+        return "AppCommands/can not identify.mp3";
     }
 }

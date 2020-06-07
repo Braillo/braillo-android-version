@@ -4,12 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.braillo.Threads.IntroductionMessage;
 import com.example.braillo.Utility.Voice;
-
-import java.util.Locale;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -20,7 +17,7 @@ public class IntroductionMessageHelper {
     boolean firstStartArabic , firstStartEnglish;
     SharedPreferences prefArabic , prefEnglish;
     SharedPreferences.Editor editorA , editorE;
-    IntroductionMessage aintroductionMessage , eintroductionMessage;
+    IntroductionMessage arIntroductionMessage, enIntroductionMessage;
 
     public IntroductionMessageHelper(Activity activity, Context context) {
         this.activity = activity;
@@ -47,32 +44,27 @@ public class IntroductionMessageHelper {
 
     public void removeIntroductionMessageArabic(boolean hasCameraPermission) {
         if (hasCameraPermission) {
-            aintroductionMessage = new IntroductionMessage(activity , "AppCommand/welcomeMessage.mp3");
-            aintroductionMessage.start();
+            arIntroductionMessage = new IntroductionMessage(activity , "AppCommands/welcomeMessage.mp3");
+            arIntroductionMessage.start();
             prefArabic = activity.getSharedPreferences("arabicIntro", MODE_PRIVATE);
             editorA = prefArabic.edit();
             editorA.putBoolean("arabicIntro", false);
             editorA.apply();
-            prefEnglish = activity.getSharedPreferences("EnglishIntro", MODE_PRIVATE);
-            editorE = prefEnglish.edit();
-            editorE.putBoolean("EnglishIntro", false);
-            editorE.apply();
+
         }
 
     }
     public void removeIntroductionMessageEnglish(boolean hasCameraPermission) {
         if (hasCameraPermission) {
             //todo : put the english message
-            eintroductionMessage = new IntroductionMessage(activity , "AppCommand/welcomeMessage.mp3");
-            eintroductionMessage.start();
+
+            enIntroductionMessage = new IntroductionMessage(activity , "AppCommands/englishWelcomeMessage.mp3");
+            enIntroductionMessage.start();
             prefEnglish = activity.getSharedPreferences("EnglishIntro", MODE_PRIVATE);
             editorE = prefEnglish.edit();
             editorE.putBoolean("EnglishIntro", false);
             editorE.apply();
-            prefArabic = activity.getSharedPreferences("arabicIntro", MODE_PRIVATE);
-            editorA = prefArabic.edit();
-            editorA.putBoolean("arabicIntro", false);
-            editorA.apply();
+
         }
 
     }

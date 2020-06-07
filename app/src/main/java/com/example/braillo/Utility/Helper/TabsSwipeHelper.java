@@ -26,21 +26,21 @@ public class TabsSwipeHelper {
                 barcodeFlag = false;
 
                 break;
-            case 2:
+            case 3:
                 currencyFlag = false;
                 detectionFlag = false;
                 colorFlag = false;
                 ocrFlag = true;
                 barcodeFlag = false;
                 break;
-            case 3:
+            case 4:
                 currencyFlag = false;
                 detectionFlag = false;
                 colorFlag = false;
                 ocrFlag = false;
                 barcodeFlag = true;
                 break;
-            case 4:
+            case 2:
                 currencyFlag = false;
                 detectionFlag = false;
                 colorFlag = true;
@@ -61,7 +61,7 @@ public class TabsSwipeHelper {
         switch (gestures.getSwipeStep()) {
             case 1:
                 if (!currencyFlag) {
-                    Voice.speak(activity, "AppCommand/currency detection.mp3", true);
+                    Voice.speak(activity, "AppCommands/currency detection.mp3", true);
                     convertFlags(gestures.getSwipeStep());
                 } else {
 
@@ -70,9 +70,9 @@ public class TabsSwipeHelper {
                 Log.d("tabs", "currency");
 
                 return;
-            case 2:
+            case 3:
                 if (!ocrFlag) {
-                    Voice.speak(activity, "AppCommand/Text recognizer.mp3", true);
+                    Voice.speak(activity, "AppCommands/Text recognizer.mp3", true);
                     convertFlags(gestures.getSwipeStep());
                 } else {
 
@@ -81,9 +81,9 @@ public class TabsSwipeHelper {
                 Log.d("tabs", "OCR");
 
                 return;
-            case 3:
+            case 4:
                 if (!barcodeFlag) {
-                    Voice.speak(activity, "AppCommand/barcode Recognizer.mp3", true);
+                    Voice.speak(activity, "AppCommands/barcode Recognizer.mp3", true);
                     convertFlags(gestures.getSwipeStep());
                 } else {
                     threadHelper.barcodeThread();
@@ -91,9 +91,9 @@ public class TabsSwipeHelper {
                 Log.d("tabs", "barcode");
                 //Barcode
                 return;
-            case 4:
+            case 2:
                 if (!colorFlag) {
-                    Voice.speak(activity, "AppCommand/color recognizer.mp3", true);
+                    Voice.speak(activity, "AppCommands/color recognizer.mp3", true);
                     convertFlags(gestures.getSwipeStep());
                 } else {
                     threadHelper.ColorThread();
@@ -103,7 +103,7 @@ public class TabsSwipeHelper {
                 return;
             default:
                 if (!detectionFlag) {
-                    Voice.speak(activity, "AppCommand/object detection.mp3", true);
+                    Voice.speak(activity, "AppCommands/object detection.mp3", true);
                     convertFlags(gestures.getSwipeStep());
                 } else {
                     threadHelper.detectionThread();

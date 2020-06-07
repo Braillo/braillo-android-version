@@ -221,7 +221,7 @@ public class ColorHelper {
                 if (namedColor != null) {
                     Voice.speak(activity, "ColorDetection/" + namedColor[0] + ".mp3", true);
                 } else
-                    Voice.speak(activity, "AppCommand/can not identify.mp3", true);
+                    Voice.speak(activity, "AppCommands/can not identify.mp3", true);
                 Log.d("Color Data :", red + "," + green + "," + blue);
             }
         };

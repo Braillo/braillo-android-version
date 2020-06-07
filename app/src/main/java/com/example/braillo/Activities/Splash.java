@@ -11,14 +11,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class Splash extends AppCompatActivity {
 
-
+    Intent i;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spalsh);
         hideNotificationBar();
-        intent();
 
+         i = new Intent(Splash.this,
+                MainActivity.class);
+        //Intent is used to switch from one activity to another.
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); /// solve start problem;
+
+
+        intent();
     }
 
     private void intent() {
@@ -26,9 +32,6 @@ public class Splash extends AppCompatActivity {
             @Override
             public void run() {
 
-                Intent i = new Intent(Splash.this,
-                        MainActivity.class);
-                //Intent is used to switch from one activity to another.
 
                 startActivity(i);
                 //invoke the SecondActivity.
