@@ -172,9 +172,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v) {
                 if (hasCameraPermission) {
-
+                    Log.d("lang1" , Voice.Language);
                     Voice.Language = Voice.Language.equals("ar") ? "en" : "ar";
-
+                    Log.d("lang1" , Voice.Language);
                     Voice.toggleLang(MainActivity.this);
 
 
@@ -194,6 +194,18 @@ public class MainActivity extends AppCompatActivity {
         swipe = new Swipe();
         gestures = new Gestures();
         swipe.setListener(gestures);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (hasCameraPermission) {
+
+            cameraConfigurations.KillCamera();
+        }
+        Voice.release();
+        threadHelper.killAllThreadsAndReleaseVoice();
 
     }
 

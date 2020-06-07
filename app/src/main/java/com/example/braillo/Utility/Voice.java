@@ -14,27 +14,27 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class Voice {
 
-    private static  SharedPreferences prefLangToggle  ;
+    private static  SharedPreferences prefLangToggle1  ,prefLangToggle2 ;
     private static MediaPlayer mediaPlayer;
     private static TextToSpeech mTTS;
     public static String Language = Locale.getDefault().getLanguage() != "en" && Locale.getDefault().getLanguage() != "ar" ?
             "ar" : Locale.getDefault().getLanguage();
     private static String[] temp;
     private static SharedPreferences.Editor editorLangToggle;
-    static String langToggle;
+    static String langToggle1 , langToggle2 ;
 
     public static void initToggle(Activity activity){
-        prefLangToggle = activity.getSharedPreferences("LnagToggle" ,MODE_PRIVATE);
-        langToggle = prefLangToggle.getString("LnagToggle" ,Language);
-        Log.d("langToggle",langToggle);
-        Language = langToggle;
+        prefLangToggle1 = activity.getSharedPreferences("LnagToggle" ,MODE_PRIVATE);
+        langToggle1 = prefLangToggle1.getString("LnagToggle" ,Language);
+        Log.d("langToggle",langToggle1);
+        Language = langToggle1;
         Log.d("lang" , Language);
 
     }
 
     public static void toggleLang(Activity activity){
-        prefLangToggle = activity.getSharedPreferences("LnagToggle" ,MODE_PRIVATE);
-        editorLangToggle = prefLangToggle.edit();
+        prefLangToggle2 = activity.getSharedPreferences("LnagToggle" ,MODE_PRIVATE);
+        editorLangToggle = prefLangToggle2.edit();
         editorLangToggle .putString("LnagToggle" , Language);
         editorLangToggle.apply();
     }
@@ -127,6 +127,7 @@ public class Voice {
             }
         }
     }
+
 
     private static String localizer(String s) {
         if (Language == "en" && s.contains(".mp3") ) {
