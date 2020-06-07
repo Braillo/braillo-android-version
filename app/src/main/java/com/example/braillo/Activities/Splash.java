@@ -21,8 +21,8 @@ public class Splash extends AppCompatActivity {
          i = new Intent(Splash.this,
                 MainActivity.class);
         //Intent is used to switch from one activity to another.
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); /// solve start problem;
 
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         intent();
     }

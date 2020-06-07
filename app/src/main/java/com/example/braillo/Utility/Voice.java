@@ -2,6 +2,7 @@ package com.example.braillo.Utility;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.speech.tts.TextToSpeech;
@@ -9,14 +10,34 @@ import android.util.Log;
 
 import java.util.Locale;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class Voice {
 
+    private static  SharedPreferences prefLangToggle  ;
     private static MediaPlayer mediaPlayer;
     private static TextToSpeech mTTS;
     public static String Language = Locale.getDefault().getLanguage() != "en" && Locale.getDefault().getLanguage() != "ar" ?
             "ar" : Locale.getDefault().getLanguage();
     private static String[] temp;
+    private static SharedPreferences.Editor editorLangToggle;
+    static String langToggle;
 
+    public static void initToggle(Activity activity){
+        prefLangToggle = activity.getSharedPreferences("LnagToggle" ,MODE_PRIVATE);
+        langToggle = prefLangToggle.getString("LnagToggle" ,Language);
+        Log.d("langToggle",langToggle);
+        Language = langToggle;
+        Log.d("lang" , Language);
+
+    }
+
+    public static void toggleLang(Activity activity){
+        prefLangToggle = activity.getSharedPreferences("LnagToggle" ,MODE_PRIVATE);
+        editorLangToggle = prefLangToggle.edit();
+        editorLangToggle .putString("LnagToggle" , Language);
+        editorLangToggle.apply();
+    }
     public static void init(final Activity activity) {
         mTTS = new TextToSpeech(activity, new TextToSpeech.OnInitListener() {
             @Override
@@ -38,12 +59,7 @@ public class Voice {
         }
     }
 
-    private static void releaseTTS() {
-        if (Voice.mTTS != null) {
-            Voice.mTTS.stop();
-            Voice.mTTS.shutdown();
-        }
-    }
+
 
     private static void releaseMediaPlayer() {
         if (mediaPlayer != null) {
@@ -58,7 +74,7 @@ public class Voice {
     public static void release() {
         releaseMediaPlayer();
         stopTTS();
-        // releaseTTS();
+
     }
 
     public static void playAssetSound(Context context, String labelVoiceFile) {

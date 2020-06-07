@@ -14,37 +14,43 @@ public class IntroductionMessageHelper {
     Activity activity;
 
     Context context;
-    boolean firstStartArabic , firstStartEnglish;
-    SharedPreferences prefArabic , prefEnglish;
-    SharedPreferences.Editor editorA , editorE;
+
+    boolean firstStartArabic, firstStartEnglish;
+    SharedPreferences prefArabic, prefEnglish;
+    SharedPreferences.Editor editorA, editorE;
     IntroductionMessage arIntroductionMessage, enIntroductionMessage;
 
     public IntroductionMessageHelper(Activity activity, Context context) {
         this.activity = activity;
 
         this.context = context;
+
+
     }
 
-    public void introductionMessage(boolean hasCameraPermission) {
+    public boolean introductionMessage(boolean hasCameraPermission) {
         prefArabic = activity.getSharedPreferences("arabicIntro", MODE_PRIVATE);
         prefEnglish = activity.getSharedPreferences("EnglishIntro", MODE_PRIVATE);
         firstStartArabic = prefArabic.getBoolean("arabicIntro", true);
-        firstStartEnglish = prefEnglish.getBoolean("EnglishIntro" , true);
-        if(Voice.Language.equals("en")) {
-            Log.d("lang" , Voice.Language);
+        firstStartEnglish = prefEnglish.getBoolean("EnglishIntro", true);
+
+        if (Voice.Language.equals("en")) {
+            Log.d("lang", Voice.Language);
             if (firstStartEnglish) {
-                removeIntroductionMessageEnglish(hasCameraPermission);
+                return removeIntroductionMessageEnglish(hasCameraPermission);
             }
-        }else{
+        } else {
             if (firstStartArabic) {
-                removeIntroductionMessageArabic(hasCameraPermission);
+                return removeIntroductionMessageArabic(hasCameraPermission);
             }
         }
+        return true;
     }
 
-    public void removeIntroductionMessageArabic(boolean hasCameraPermission) {
+
+    public boolean removeIntroductionMessageArabic(boolean hasCameraPermission) {
         if (hasCameraPermission) {
-            arIntroductionMessage = new IntroductionMessage(activity , "AppCommands/welcomeMessage.mp3");
+            arIntroductionMessage = new IntroductionMessage(activity, "AppCommands/welcomeMessage.mp3");
             arIntroductionMessage.start();
             prefArabic = activity.getSharedPreferences("arabicIntro", MODE_PRIVATE);
             editorA = prefArabic.edit();
@@ -52,13 +58,14 @@ public class IntroductionMessageHelper {
             editorA.apply();
 
         }
-
+        return false;
     }
-    public void removeIntroductionMessageEnglish(boolean hasCameraPermission) {
+
+    public boolean removeIntroductionMessageEnglish(boolean hasCameraPermission) {
         if (hasCameraPermission) {
             //todo : put the english message
 
-            enIntroductionMessage = new IntroductionMessage(activity , "AppCommands/englishWelcomeMessage.mp3");
+            enIntroductionMessage = new IntroductionMessage(activity, "AppCommands/englishWelcomeMessage.mp3");
             enIntroductionMessage.start();
             prefEnglish = activity.getSharedPreferences("EnglishIntro", MODE_PRIVATE);
             editorE = prefEnglish.edit();
@@ -66,6 +73,6 @@ public class IntroductionMessageHelper {
             editorE.apply();
 
         }
-
+        return false;
     }
 }

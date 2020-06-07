@@ -1,9 +1,9 @@
 package com.example.braillo.Activities;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final int CameraCode = 1;
     BitmapConfiguration bitmapConfiguration;
-    SharedPreferences prefArabic, prefEnglish;
+
     //layout
     LinearLayout linearLayout;
     //threads
@@ -70,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        prefArabic = this.getSharedPreferences("arabicIntro", MODE_PRIVATE);
-        prefEnglish = this.getSharedPreferences("EnglishIntro", MODE_PRIVATE);
+
         Voice.init(this);
+        Voice.initToggle(this);
 
         importViews();
         cameraConfigurations = new CameraConfiguration(cameraView, this, focusView);
@@ -123,8 +123,9 @@ public class MainActivity extends AppCompatActivity {
 
             cameraConfigurations.KillCamera();
         }
-
+        Voice.release();
         threadHelper.killAllThreadsAndReleaseVoice();
+
 
     }
 
@@ -171,15 +172,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v) {
                 if (hasCameraPermission) {
-                    Voice.Language = Voice.Language == "ar" ? "en" : "ar";
+
+                    Voice.Language = Voice.Language.equals("ar") ? "en" : "ar";
+
+                    Voice.toggleLang(MainActivity.this);
 
 
-                    if (prefArabic.getBoolean("arabicIntro", true) &&
-                            prefEnglish.getBoolean("EnglishIntro", true)) {
+                    boolean t = introductionMessageHelper.introductionMessage(hasCameraPermission);
+                    if (t) {
                         threadHelper.languageToggleThread();
-                    } else {
-                        introductionMessageHelper.introductionMessage(hasCameraPermission);
                     }
+
                     Gestures.swipesNumber = Voice.Language.equals("ar") ? 3 : 5;
                 }
                 return true;
