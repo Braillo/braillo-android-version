@@ -1,4 +1,4 @@
-# about braillo 
+## About braillo 
 braillo is an application of Artificial intelligence bringing sight to visually impaired and low vision people by turning the visual world into an audible experience.
 
 ## Installation
